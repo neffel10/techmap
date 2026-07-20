@@ -1,0 +1,418 @@
+{
+  "categories": [
+    {
+      "id": "frontend-frameworks",
+      "title": "Frontend Frameworks & Libraries",
+      "coverCode": "import React from 'react';\nconst App = () => <Dashboard />;"
+    },
+    {
+      "id": "languages-styling",
+      "title": "Languages & Styling Tools",
+      "coverCode": "@import 'tailwindcss';\n.btn { @apply px-4 py-2; }"
+    },
+    {
+      "id": "backend-apis",
+      "title": "Backend & APIs",
+      "coverCode": "const express = require('express');\napp.listen(3000);"
+    },
+    {
+      "id": "analytics-marketing",
+      "title": "Analytics & Marketing",
+      "coverCode": "gtag('event', 'conversion', { 'send_to': 'AW-123' });"
+    },
+    {
+      "id": "devops-infrastructure",
+      "title": "DevOps & Infrastructure",
+      "coverCode": "FROM node:20-alpine\nCMD ['npm', 'start']"
+    },
+    {
+      "id": "cms",
+      "title": "Content Management Systems",
+      "coverCode": "query { allPosts { title slug } }"
+    },
+    {
+      "id": "crm",
+      "title": "Customer Relationship Management",
+      "coverCode": "SELECT Id, Name, StageName FROM Opportunity"
+    }
+  ],
+  "technologies": [
+    {
+      "id": "react",
+      "categoryId": "frontend-frameworks",
+      "title": "React.js",
+      "status": "i-know",
+      "simpleMetaphor": "Think of it like LEGO blocks for websites. You build your website by combining small reusable pieces.",
+      "technicalExplanation": "JavaScript library for building user interfaces with reusable components.",
+      "worksWellWith": ["Next.js", "TypeScript", "Tailwind CSS"],
+      "connections": ["next", "typescript", "tailwind"]
+    },
+    {
+      "id": "next",
+      "categoryId": "frontend-frameworks",
+      "title": "Next.js",
+      "status": "learning",
+      "simpleMetaphor": "React's super-powered version with built-in routing, SSR and SSG.",
+      "technicalExplanation": "React framework with server-side rendering and routing optimizations out of the box.",
+      "worksWellWith": ["React.js", "Node.js", "TypeScript"],
+      "connections": ["react", "node", "typescript"]
+    },
+    {
+      "id": "vue",
+      "categoryId": "frontend-frameworks",
+      "title": "Vue.js",
+      "status": "to-explore",
+      "simpleMetaphor": "Progressive framework for building interfaces, easier to learn for beginners.",
+      "technicalExplanation": "Progressive JavaScript framework for building UIs.",
+      "worksWellWith": ["TypeScript", "Tailwind CSS"],
+      "connections": ["typescript", "tailwind"]
+    },
+    {
+      "id": "angular",
+      "categoryId": "frontend-frameworks",
+      "title": "Angular",
+      "status": "to-explore",
+      "simpleMetaphor": "Google's complete framework with strict structural guidelines for big teams.",
+      "technicalExplanation": "TypeScript-based framework by Google with opinionated structure.",
+      "worksWellWith": ["TypeScript"],
+      "connections": ["typescript"]
+    },
+    {
+      "id": "typescript",
+      "categoryId": "languages-styling",
+      "title": "TypeScript",
+      "status": "i-know",
+      "simpleMetaphor": "JavaScript with spell-checker. It catches mistakes before your code runs.",
+      "technicalExplanation": "Typed superset of JavaScript that adds static type checking.",
+      "worksWellWith": ["React.js", "Next.js", "Node.js"],
+      "connections": ["react", "next", "node"]
+    },
+    {
+      "id": "tailwind",
+      "categoryId": "languages-styling",
+      "title": "Tailwind CSS",
+      "status": "i-know",
+      "simpleMetaphor": "Design your website using utility classes directly in your HTML/JSX.",
+      "technicalExplanation": "Utility-first CSS framework for rapid UI development.",
+      "worksWellWith": ["React.js", "Next.js"],
+      "connections": ["react", "next"]
+    },
+    {
+      "id": "sass",
+      "categoryId": "languages-styling",
+      "title": "SASS/LESS",
+      "status": "i-know",
+      "simpleMetaphor": "CSS with superpowers (variables, nesting, mixins).",
+      "technicalExplanation": "CSS preprocessors that extend standard stylesheet capabilities.",
+      "worksWellWith": ["Tailwind CSS"],
+      "connections": ["tailwind"]
+    },
+    {
+      "id": "node",
+      "categoryId": "backend-apis",
+      "title": "Node.js",
+      "status": "i-know",
+      "simpleMetaphor": "JavaScript runtime for building backend services and servers.",
+      "technicalExplanation": "Event-driven JavaScript runtime built on Chrome's V8 engine.",
+      "worksWellWith": ["Next.js", "REST API"],
+      "connections": ["next", "rest-api"]
+    },
+    {
+      "id": "rest-api",
+      "categoryId": "backend-apis",
+      "title": "JSON/REST API",
+      "status": "i-know",
+      "simpleMetaphor": "A standard way for applications to request and send data formatted in JSON.",
+      "technicalExplanation": "Web API communication interface returning structured JSON responses.",
+      "worksWellWith": ["Node.js", "React.js"],
+      "connections": ["node", "react"]
+    },
+    {
+      "id": "restful",
+      "categoryId": "backend-apis",
+      "title": "RESTful API",
+      "status": "i-know",
+      "simpleMetaphor": "The strict architectural principles for building clean, stateless REST APIs.",
+      "technicalExplanation": "Architectural constraints for resource-oriented RESTful web services.",
+      "worksWellWith": ["JSON/REST API"],
+      "connections": ["rest-api"]
+    },
+    {
+      "id": "wordpress",
+      "categoryId": "cms",
+      "title": "WordPress",
+      "status": "i-know",
+      "simpleMetaphor": "Traditional CMS powering over 40% of the web.",
+      "technicalExplanation": "Monolithic open-source content management system.",
+      "worksWellWith": ["REST API"],
+      "connections": ["rest-api"]
+    },
+    {
+      "id": "contentful",
+      "categoryId": "cms",
+      "title": "Contentful",
+      "status": "to-explore",
+      "simpleMetaphor": "Cloud Headless CMS that delivers content anywhere via API.",
+      "technicalExplanation": "Enterprise cloud-native API-first headless CMS.",
+      "worksWellWith": ["Next.js", "React.js"],
+      "connections": ["next", "react"]
+    },
+    {
+      "id": "strapi",
+      "categoryId": "cms",
+      "title": "Strapi",
+      "status": "learning",
+      "simpleMetaphor": "Open-source Node.js headless CMS you can host yourself.",
+      "technicalExplanation": "Customizable open-source Node.js headless CMS.",
+      "worksWellWith": ["React.js", "Next.js"],
+      "connections": ["react", "next"]
+    },
+    {
+      "id": "sanity",
+      "categoryId": "cms",
+      "title": "Sanity",
+      "status": "to-explore",
+      "simpleMetaphor": "Real-time collaborative headless CMS with customizable schemas.",
+      "technicalExplanation": "Structured content platform with real-time editing API.",
+      "worksWellWith": ["Next.js", "React.js"],
+      "connections": ["next", "react"]
+    },
+    {
+      "id": "salesforce",
+      "categoryId": "crm",
+      "title": "Salesforce",
+      "status": "to-explore",
+      "simpleMetaphor": "#1 global CRM for managing sales, leads, and clients.",
+      "technicalExplanation": "Enterprise cloud platform for CRM and business workflows.",
+      "worksWellWith": ["REST API"],
+      "connections": ["rest-api"]
+    },
+    {
+      "id": "hubspot",
+      "categoryId": "crm",
+      "title": "HubSpot",
+      "status": "learning",
+      "simpleMetaphor": "Inbound marketing and CRM platform for growing businesses.",
+      "technicalExplanation": "Integrated CRM, marketing automation and sales engine.",
+      "worksWellWith": ["Google Analytics"],
+      "connections": ["ga"]
+    },
+    {
+      "id": "zoho",
+      "categoryId": "crm",
+      "title": "Zoho CRM",
+      "status": "to-explore",
+      "simpleMetaphor": "Cost-effective CRM solution for SMBs.",
+      "technicalExplanation": "Scalable business CRM suite for lead management.",
+      "worksWellWith": ["REST API"],
+      "connections": ["rest-api"]
+    },
+    {
+      "id": "ga",
+      "categoryId": "analytics-marketing",
+      "title": "Google Analytics",
+      "status": "i-know",
+      "simpleMetaphor": "Web traffic and user behavior analytics platform.",
+      "technicalExplanation": "Web analytics service for user engagement metrics.",
+      "worksWellWith": ["Google Tag Manager"],
+      "connections": ["gtm"]
+    },
+    {
+      "id": "gtm",
+      "categoryId": "analytics-marketing",
+      "title": "Google Tag Manager",
+      "status": "i-know",
+      "simpleMetaphor": "Central hub to deploy pixels and tags without code changes.",
+      "technicalExplanation": "Tag management system for marketing script injection.",
+      "worksWellWith": ["Google Analytics"],
+      "connections": ["ga"]
+    },
+    {
+      "id": "docker",
+      "categoryId": "devops-infrastructure",
+      "title": "Docker",
+      "status": "learning",
+      "simpleMetaphor": "Containerize your applications so they run reliably anywhere.",
+      "technicalExplanation": "Containerization platform isolating code and dependencies.",
+      "worksWellWith": ["Node.js"],
+      "connections": ["node"]
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "frontend-frameworks-comparison",
+      "title": "React vs Vue vs Angular - ¿Cuál elegir?",
+      "technologies": ["react", "vue", "angular"],
+      "winner": "react",
+      "explanation": "React es el más popular (40% del mercado), Vue es el más fácil de aprender, Angular es el más completo para empresas grandes.",
+      "whenToUse": [
+        {
+          "techId": "react",
+          "scenario": "Proyectos de cualquier tamaño, trabajos freelance, startups. La comunidad más grande significa más recursos y soluciones a problemas."
+        },
+        {
+          "techId": "vue",
+          "scenario": "Proyectos pequeños a medianos, si vienes de JavaScript vanilla. Muy popular en Asia. Ideal para empezar en frameworks."
+        },
+        {
+          "techId": "angular",
+          "scenario": "Proyectos empresariales grandes con muchos desarrolladores. Si ya usas TypeScript y quieres estructura estricta."
+        }
+      ],
+      "transitionDifficulty": [
+        { "from": "react", "to": "vue", "difficulty": "easy", "timeEstimate": "1-2 semanas" },
+        { "from": "vue", "to": "react", "difficulty": "easy", "timeEstimate": "2-3 semanas" },
+        { "from": "react", "to": "angular", "difficulty": "hard", "timeEstimate": "1-2 meses" }
+      ]
+    },
+    {
+      "id": "cms-comparison",
+      "title": "WordPress vs Headless CMS - ¿Tradicional o Moderno?",
+      "technologies": ["wordpress", "contentful", "strapi", "sanity"],
+      "winner": "wordpress",
+      "explanation": "WordPress domina con 43% de todos los sitios web. Headless CMS son el futuro pero requieren más conocimiento técnico.",
+      "whenToUse": [
+        {
+          "techId": "wordpress",
+          "scenario": "Blogs, sitios corporativos, tiendas pequeñas. Necesitas lanzar rápido sin mucho código. Miles de plugins disponibles."
+        },
+        {
+          "techId": "contentful",
+          "scenario": "Necesitas contenido en web, app móvil y otros dispositivos. Equipos grandes, presupuesto para herramientas de pago."
+        },
+        {
+          "techId": "strapi",
+          "scenario": "Quieres un headless CMS gratis y con control total. Tienes servidor propio y conocimientos de Node.js."
+        },
+        {
+          "techId": "sanity",
+          "scenario": "Necesitas edición en tiempo real y estructura de contenido muy flexible. Proyectos medianos a grandes."
+        }
+      ],
+      "transitionDifficulty": [
+        { "from": "wordpress", "to": "strapi", "difficulty": "hard", "timeEstimate": "1-2 meses" },
+        { "from": "contentful", "to": "strapi", "difficulty": "easy", "timeEstimate": "1 semana" }
+      ]
+    },
+    {
+      "id": "crm-comparison",
+      "title": "Salesforce vs HubSpot vs Zoho - ¿Cuál CRM?",
+      "technologies": ["salesforce", "hubspot", "zoho"],
+      "winner": "salesforce",
+      "explanation": "Salesforce es el líder (#1 mundial), HubSpot es mejor para marketing, Zoho es la opción económica.",
+      "whenToUse": [
+        {
+          "techId": "salesforce",
+          "scenario": "Empresas grandes con presupuesto alto. Necesitas máxima personalización y poder."
+        },
+        {
+          "techId": "hubspot",
+          "scenario": "Empresas medianas enfocadas en inbound marketing. Excelente para blogs, email marketing y redes sociales."
+        },
+        {
+          "techId": "zoho",
+          "scenario": "Pequeñas y medianas empresas con presupuesto limitado. Buena relación calidad-precio."
+        }
+      ],
+      "transitionDifficulty": [
+        { "from": "hubspot", "to": "salesforce", "difficulty": "hard", "timeEstimate": "2-3 meses" },
+        { "from": "zoho", "to": "salesforce", "difficulty": "medium", "timeEstimate": "1-2 meses" }
+      ]
+    },
+    {
+      "id": "styling-comparison",
+      "title": "Tailwind vs SASS/LESS - ¿Utility-first o Preprocessor?",
+      "technologies": ["tailwind", "sass"],
+      "winner": "tailwind",
+      "explanation": "Tailwind está creciendo rápidamente (moda actual), SASS es el estándar tradicional. Ambos son válidos.",
+      "whenToUse": [
+        {
+          "techId": "tailwind",
+          "scenario": "Proyectos modernos con React/Vue/Next. Quieres prototipar rápido sin pensar en nombres de clases CSS."
+        },
+        {
+          "techId": "sass",
+          "scenario": "Proyectos grandes con sistemas de diseño complejos y CSS tradicional con superpoderes."
+        }
+      ],
+      "transitionDifficulty": [
+        { "from": "sass", "to": "tailwind", "difficulty": "medium", "timeEstimate": "1-2 semanas" }
+      ]
+    },
+    {
+      "id": "analytics-comparison",
+      "title": "Google Analytics vs Alternativas",
+      "technologies": ["ga", "gtm"],
+      "winner": "ga",
+      "explanation": "Google Analytics es el estándar de facto (85% de sitios que usan analytics). GTM complementa a GA.",
+      "whenToUse": [
+        {
+          "techId": "ga",
+          "scenario": "Cualquier sitio web que necesite analytics. Gratis, poderoso, se integra con el ecosistema de Google."
+        },
+        {
+          "techId": "gtm",
+          "scenario": "Tienes múltiples herramientas de tracking y quieres gestionarlas sin modificar código constantemente."
+        }
+      ],
+      "transitionDifficulty": []
+    },
+    {
+      "id": "devops-comparison",
+      "title": "Docker vs Deployment Tradicional",
+      "technologies": ["docker"],
+      "winner": "docker",
+      "explanation": "Docker es el estándar moderno. Casi obligatorio aprender para desarrollo profesional.",
+      "whenToUse": [
+        {
+          "techId": "docker",
+          "scenario": "Cualquier proyecto profesional en equipo. Garantiza que lo que funciona en tu máquina funcione igual en producción."
+        }
+      ],
+      "transitionDifficulty": []
+    },
+    {
+      "id": "api-comparison",
+      "title": "API vs RESTful API vs JSON/REST API - ¿Cuál es la diferencia?",
+      "technologies": ["rest-api", "restful"],
+      "winner": "rest-api",
+      "explanation": "Estos términos están relacionados pero no son lo mismo. API es el concepto general, RESTful es el estilo arquitectónico, y JSON/REST API es la implementación específica usando JSON.",
+      "whenToUse": [
+        {
+          "techId": "rest-api",
+          "scenario": "JSON/REST API combina el estilo REST con el formato JSON. Es la implementación real usada en el 90% de aplicaciones web modernas."
+        },
+        {
+          "techId": "restful",
+          "scenario": "RESTful API representa el cumplimiento estricto de las reglas arquitectónicas (verbos HTTP, statelessness, URLs limpias)."
+        }
+      ],
+      "transitionDifficulty": []
+    },
+    {
+      "id": "server-client-components",
+      "title": "Server Components vs Client Components - ¿Dónde renderizar?",
+      "technologies": ["next", "react"],
+      "winner": "next",
+      "explanation": "Server Components (SC) se ejecutan SOLO en el servidor y envían HTML al navegador. Client Components (CC) se ejecutan en el navegador y permiten interactividad.",
+      "whenToUse": [
+        {
+          "techId": "next",
+          "scenario": "🖥️ SERVER COMPONENTS (por defecto en Next.js 13+): Úsalos para contenido estático, llamadas a bases de datos, y lo que no necesite interactividad. ⚡ Carga más rápida y mayor seguridad."
+        },
+        {
+          "techId": "react",
+          "scenario": "💻 CLIENT COMPONENTS (marcados con 'use client'): Úsalos para interactividad (clicks, formularios, useState, useEffect). ⚠️ Envía más JavaScript al cliente."
+        }
+      ],
+      "transitionDifficulty": [
+        {
+          "from": "react",
+          "to": "next",
+          "difficulty": "medium",
+          "timeEstimate": "2-3 semanas para entender el modelo mental nuevo"
+        }
+      ]
+    }
+  ]
+}

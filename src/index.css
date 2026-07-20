@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+/* Force light theme base for TechMap */
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  background-color: #f8fafc;
+  color: #0f172a; /* Slate 900 dark text */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
