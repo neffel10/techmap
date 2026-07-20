@@ -199,18 +199,26 @@ const App = () => {
 
           return (
             <div key={category.id} className="flex flex-col gap-4">
-              {/* Category Cover Header */}
-              <div className="relative overflow-hidden rounded-2xl bg-slate-900 text-white p-6 shadow-md border border-slate-800 min-h-[130px] flex items-end">
-                {category.coverCode && (
-                  <pre className="absolute top-2 left-4 text-[11px] text-slate-400 font-mono opacity-50 select-none">
-                    {category.coverCode}
-                  </pre>
-                )}
+              {/* Category Cover Header with Image */}
+              <div className="relative overflow-hidden rounded-2xl h-36 shadow-md border border-slate-200 flex items-end p-5">
+                {/* Background Image */}
+                <img 
+                  src={category.image} 
+                  alt={category.title} 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                
+                {/* Gradient Overlay for Text Readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
+                {/* Content */}
                 <div className="relative z-10 flex items-center gap-3">
-                  <div className="p-2 bg-blue-600 rounded-lg text-white">
+                  <div className={`${category.color || 'bg-blue-600'} p-2 rounded-xl text-white shadow-md flex items-center justify-center`}>
                     <Code2 className="w-5 h-5" />
                   </div>
-                  <h2 className="text-lg font-bold tracking-tight text-white">{category.title}</h2>
+                  <h2 className="text-lg font-bold tracking-tight text-white drop-shadow-md">
+                    {category.title}
+                  </h2>
                 </div>
               </div>
 

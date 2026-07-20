@@ -3,37 +3,51 @@
     {
       "id": "frontend-frameworks",
       "title": "Frontend Frameworks & Libraries",
-      "coverCode": "import React from 'react';\nconst App = () => <Dashboard />;"
+      "color": "bg-blue-500",
+      "icon": "code",
+      "image": "https://images.unsplash.com/photo-1643116774075-acc00caa9a7b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
     },
     {
       "id": "languages-styling",
       "title": "Languages & Styling Tools",
-      "coverCode": "@import 'tailwindcss';\n.btn { @apply px-4 py-2; }"
+      "color": "bg-purple-500",
+      "icon": "file-text",
+      "image": "https://images.unsplash.com/photo-1665625771509-072025eb2d47?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
     },
     {
       "id": "backend-apis",
       "title": "Backend & APIs",
-      "coverCode": "const express = require('express');\napp.listen(3000);"
+      "color": "bg-green-500",
+      "icon": "server",
+      "image": "https://images.unsplash.com/photo-1579274216947-86eaa4b00475?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
     },
     {
       "id": "analytics-marketing",
       "title": "Analytics & Marketing",
-      "coverCode": "gtag('event', 'conversion', { 'send_to': 'AW-123' });"
+      "color": "bg-pink-500",
+      "icon": "bar-chart-3",
+      "image": "https://images.unsplash.com/photo-1666875753105-c63a6f3bdc86?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
     },
     {
       "id": "devops-infrastructure",
       "title": "DevOps & Infrastructure",
-      "coverCode": "FROM node:20-alpine\nCMD ['npm', 'start']"
+      "color": "bg-cyan-500",
+      "icon": "workflow",
+      "image": "https://images.unsplash.com/photo-1606185540834-d6e7483ee1a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
     },
     {
       "id": "cms",
       "title": "Content Management Systems",
-      "coverCode": "query { allPosts { title slug } }"
+      "color": "bg-orange-500",
+      "icon": "file-text",
+      "image": "https://images.unsplash.com/photo-1519337265831-281ec6cc8514?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
     },
     {
       "id": "crm",
       "title": "Customer Relationship Management",
-      "coverCode": "SELECT Id, Name, StageName FROM Opportunity"
+      "color": "bg-rose-500",
+      "icon": "users",
+      "image": "https://images.unsplash.com/photo-1553775282-20af80779df7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
     }
   ],
   "technologies": [
