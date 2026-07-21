@@ -11,15 +11,37 @@ import {
   Sun,
   Moon,
   Zap,
-  Lightbulb
+  Lightbulb,
+  Plus,
+  Eye,
+  EyeOff,
+  Crown,
+  Trash2,
+  FolderMinus,
+  FolderCheck,
+  Globe,
+  RotateCcw,
+  AlertTriangle,
+  Scale,
+  User
 } from 'lucide-react';
 
 // Import local modular data
-import { categories, comparisons, technologies } from './data';
+import { categories as initialCategories, comparisons, technologies as initialTechnologies } from './data';
 import { ComparisonModal } from './components/ComparisonModal';
+import { CareerQuizModal } from './components/CareerQuizModal';
 
-// Helper component for monochromatic white SVG logos
-const TechLogo = ({ id, className = "w-5 h-5" }) => {
+// Robust Helper component for monochromatic white SVG logos
+const TechLogo = ({ tech, className = "w-5 h-5" }) => {
+  const [hasError, setHasError] = useState(false);
+
+  const techId = typeof tech === 'string' ? tech : tech?.id;
+  const customIconSlug = typeof tech === 'object' ? tech?.customIconSlug : null;
+
+  useEffect(() => {
+    setHasError(false);
+  }, [techId, customIconSlug]);
+
   const iconSlugs = {
     react: 'react',
     next: 'nextdotjs',
@@ -38,16 +60,23 @@ const TechLogo = ({ id, className = "w-5 h-5" }) => {
     ga: 'googleanalytics',
     gtm: 'googletagmanager',
     'rest-api': 'postman',
-    restful: 'postman'
+    restful: 'postman',
+    svelte: 'svelte',
+    remix: 'remix',
+    astro: 'astro'
   };
 
-  const slug = iconSlugs[id];
-  if (!slug) return <Code2 className={`${className} text-slate-400`} />;
+  const slug = customIconSlug || iconSlugs[techId] || techId;
+
+  if (hasError || !slug) {
+    return <Code2 className={`${className} text-slate-400`} />;
+  }
 
   return (
     <img 
       src={`https://cdn.simpleicons.org/${slug}/white`} 
-      alt={id}
+      alt={techId}
+      onError={() => setHasError(true)}
       className={`${className} object-contain opacity-90 group-hover:opacity-100 transition-opacity`}
       loading="lazy"
     />
@@ -61,69 +90,221 @@ export default function App() {
     return savedTheme ? savedTheme === 'dark' : true;
   });
 
-  // Mode & Notification Toast State
+  // Mode & Navigation State
+  const [viewMode, setViewMode] = useState('atlas'); // 'atlas' | 'admin'
   const [isSimpleMode, setIsSimpleMode] = useState(true);
   const [modeNotification, setModeNotification] = useState(null);
+  const [showRestoreConfirm, setShowRestoreConfirm] = useState(false);
+
+  // AI Roadmap Filter & Mandatory Onboarding
+  const [aiRoadmapFilter, setAiRoadmapFilter] = useState(null);
+  const [isAiModalOpen, setIsAiModalOpen] = useState(() => {
+    const completed = localStorage.getItem('techmap-ai-completed');
+    return !completed; // Abre a fuerzas si NO lo ha completado antes
+  });
+
+  // Comparisons Banner Toggle State
+  const [showComparisonBanner, setShowComparisonBanner] = useState(false);
+
+  // Dynamic Technologies State
+  const [techList, setTechList] = useState(() => {
+    const saved = localStorage.getItem('techmap-custom-techs');
+    return saved ? JSON.parse(saved) : initialTechnologies.map(t => ({ ...t, isHidden: false }));
+  });
+
+  // Hidden Categories State
+  const [hiddenCategoryIds, setHiddenCategoryIds] = useState(() => {
+    const saved = localStorage.getItem('techmap-hidden-categories');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Admin New Card Form State
+  const [newCard, setNewCard] = useState({
+    title: '',
+    categoryId: initialCategories[0]?.id || '',
+    simpleMetaphor: '',
+    technicalExplanation: '',
+    iconSlug: '',
+    connections: []
+  });
+
+  // Connection Portal Search State in Admin
+  const [portalSearch, setPortalSearch] = useState('');
 
   // Search & Navigation State
-  const [selectedCategoryId, setSelectedCategoryId] = useState(null); // NULL = Grid View
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [selectedTechId, setSelectedTechId] = useState(null);
-  const [statusFilter, setStatusFilter] = useState('all'); // 'all' | 'i-know' | 'learning' | 'to-explore'
+  const [statusFilter, setStatusFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeComparison, setActiveComparison] = useState(null);
   const [userTechStatus, setUserTechStatus] = useState({});
-  const [isComparisonsOpen, setIsComparisonsOpen] = useState(false);
 
-  // Save theme selection in localStorage
+  // Persistence Effects
   useEffect(() => {
     localStorage.setItem('techmap-theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
-  // Mode Switch Handler with Screen Flash HUD Animation
+  useEffect(() => {
+    localStorage.setItem('techmap-custom-techs', JSON.stringify(techList));
+  }, [techList]);
+
+  useEffect(() => {
+    localStorage.setItem('techmap-hidden-categories', JSON.stringify(hiddenCategoryIds));
+  }, [hiddenCategoryIds]);
+
+  // Toast Notification
   const handleModeSwitch = (simple) => {
     if (isSimpleMode === simple) return;
-
     setIsSimpleMode(simple);
-
-    if (simple) {
-      setModeNotification({
-        title: "Simple Mode: ON",
-        subtitle: "Every technology explained with clear, everyday metaphors!",
-        icon: "💡"
-      });
-    } else {
-      setModeNotification({
-        title: "Technical Mode: ON",
-        subtitle: "Production-ready technical specs and engineering architecture.",
-        icon: "⚡"
-      });
-    }
-
-    setTimeout(() => {
-      setModeNotification(null);
-    }, 1600);
+    setModeNotification({
+      title: simple ? "Simple Mode: ON" : "Technical Mode: ON",
+      subtitle: simple ? "Every technology explained with clear metaphors!" : "Production-ready technical specs.",
+      icon: simple ? "💡" : "⚡"
+    });
+    setTimeout(() => setModeNotification(null), 1600);
   };
 
-  // Dynamic status counters
+  // Reset local storage with explicit confirmation
+  const confirmResetToDefaults = () => {
+    localStorage.removeItem('techmap-custom-techs');
+    localStorage.removeItem('techmap-hidden-categories');
+    setTechList(initialTechnologies.map(t => ({ ...t, isHidden: false })));
+    setHiddenCategoryIds([]);
+    setShowRestoreConfirm(false);
+    
+    setModeNotification({
+      title: "System Restored",
+      subtitle: "Restored initial system technologies and reset visibility.",
+      icon: "🔄"
+    });
+    setTimeout(() => setModeNotification(null), 1600);
+  };
+
+  // Toggle Card Visibility
+  const toggleCardVisibility = (techId) => {
+    setTechList(prev => prev.map(tech => 
+      tech.id === techId ? { ...tech, isHidden: !tech.isHidden } : tech
+    ));
+  };
+
+  // Delete Custom Card Handler
+  const handleDeleteCustomCard = (techId) => {
+    setTechList(prevList => {
+      const filteredList = prevList.filter(tech => tech.id !== techId);
+      return filteredList.map(tech => ({
+        ...tech,
+        connections: (tech.connections || []).filter(connId => connId !== techId)
+      }));
+    });
+
+    setModeNotification({
+      title: "Card Deleted",
+      subtitle: "Removed safely without affecting base technologies.",
+      icon: "🗑️"
+    });
+    setTimeout(() => setModeNotification(null), 1600);
+  };
+
+  // Toggle Category Visibility
+  const toggleCategoryVisibility = (catId) => {
+    setHiddenCategoryIds(prev => 
+      prev.includes(catId) ? prev.filter(id => id !== catId) : [...prev, catId]
+    );
+  };
+
+  // Add Portal Connection to New Card Form
+  const handleAddConnection = (targetId) => {
+    if (!newCard.connections.includes(targetId)) {
+      setNewCard(prev => ({
+        ...prev,
+        connections: [...prev.connections, targetId]
+      }));
+    }
+    setPortalSearch('');
+  };
+
+  // Remove Portal Connection from New Card Form
+  const handleRemoveConnection = (targetId) => {
+    setNewCard(prev => ({
+      ...prev,
+      connections: prev.connections.filter(id => id !== targetId)
+    }));
+  };
+
+  // Add New Custom Card Handler
+  const handleAddCard = (e) => {
+    e.preventDefault();
+    if (!newCard.title.trim() || !newCard.simpleMetaphor.trim()) return;
+
+    const generatedUniqueId = `custom-card-${crypto.randomUUID()}`;
+
+    const createdTech = {
+      id: generatedUniqueId,
+      title: newCard.title.trim(),
+      categoryId: newCard.categoryId,
+      simpleMetaphor: newCard.simpleMetaphor.trim(),
+      technicalExplanation: newCard.technicalExplanation.trim() || newCard.simpleMetaphor.trim(),
+      status: 'to-explore',
+      connections: newCard.connections,
+      worksWellWith: [],
+      isHidden: false,
+      isCustom: true,
+      customIconSlug: newCard.iconSlug.trim() || null
+    };
+
+    setTechList(prevList => {
+      const updatedList = [createdTech, ...prevList];
+
+      return updatedList.map(tech => {
+        if (newCard.connections.includes(tech.id)) {
+          const existingConnections = tech.connections || [];
+          if (!existingConnections.includes(generatedUniqueId)) {
+            return {
+              ...tech,
+              connections: [...existingConnections, generatedUniqueId]
+            };
+          }
+        }
+        return tech;
+      });
+    });
+
+    setNewCard({
+      title: '',
+      categoryId: initialCategories[0]?.id || '',
+      simpleMetaphor: '',
+      technicalExplanation: '',
+      iconSlug: '',
+      connections: []
+    });
+
+    setModeNotification({
+      title: "Card Created!",
+      subtitle: "Unique UUID assigned. Reciprocal links active.",
+      icon: "🎯"
+    });
+    setTimeout(() => setModeNotification(null), 1600);
+  };
+
+  // Filter Categories for Public Atlas
+  const visibleCategories = initialCategories.filter(cat => !hiddenCategoryIds.includes(cat.id));
+
+  // Active status counters
+  const visibleTechs = techList.filter(t => !t.isHidden && !hiddenCategoryIds.includes(t.categoryId));
   const counts = {
-    iKnow: technologies.filter((t) => (userTechStatus[t.id] || t.status) === 'i-know').length,
-    learning: technologies.filter((t) => (userTechStatus[t.id] || t.status) === 'learning').length,
-    toExplore: technologies.filter((t) => (userTechStatus[t.id] || t.status) === 'to-explore').length,
+    iKnow: visibleTechs.filter((t) => (userTechStatus[t.id] || t.status) === 'i-know').length,
+    learning: visibleTechs.filter((t) => (userTechStatus[t.id] || t.status) === 'learning').length,
+    toExplore: visibleTechs.filter((t) => (userTechStatus[t.id] || t.status) === 'to-explore').length,
   };
 
-  // Toggle or select status filter via pills
   const handlePillFilterClick = (filterType) => {
-    if (statusFilter === filterType) {
-      setStatusFilter('all'); // Toggle off if clicking the currently active filter
-    } else {
-      setStatusFilter(filterType);
-    }
+    setStatusFilter(statusFilter === filterType ? 'all' : filterType);
   };
 
   const handleToggleStatus = (e, techId) => {
     e.stopPropagation();
     setUserTechStatus((prev) => {
-      const current = prev[techId] || technologies.find((t) => t.id === techId)?.status || 'to-explore';
+      const current = prev[techId] || techList.find((t) => t.id === techId)?.status || 'to-explore';
       let nextStatus = 'learning';
       if (current === 'learning') nextStatus = 'i-know';
       else if (current === 'i-know') nextStatus = 'to-explore';
@@ -133,51 +314,48 @@ export default function App() {
   };
 
   const handleTechClick = (techId) => {
-    if (selectedTechId === techId) {
-      setSelectedTechId(null);
-      return;
-    }
-    setSelectedTechId(techId);
+    setSelectedTechId(selectedTechId === techId ? null : techId);
   };
 
   const handleTeleport = (e, targetTechId) => {
     e.stopPropagation();
-    
-    const targetTech = technologies.find((t) => t.id === targetTechId);
+    const targetTech = techList.find((t) => t.id === targetTechId);
     if (targetTech) {
       setSelectedCategoryId(targetTech.categoryId);
     }
-
     setSelectedTechId(targetTechId);
-
-    setTimeout(() => {
-      const element = document.getElementById(`tech-card-${targetTechId}`);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        element.classList.add('ring-4', 'ring-emerald-500/50');
-        setTimeout(() => {
-          element.classList.remove('ring-4', 'ring-emerald-500/50');
-        }, 1500);
-      }
-    }, 100);
   };
 
-  // Filter logic
-  const filteredTechnologies = technologies.map((tech) => ({
-    ...tech,
-    status: userTechStatus[tech.id] || tech.status
-  })).filter((tech) => {
-    const matchesSearch = tech.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      tech.simpleMetaphor.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      tech.technicalExplanation.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesStatus = statusFilter === 'all' || tech.status === statusFilter;
+  // Filtered Techs for rendering in Atlas View
+  const filteredTechnologies = techList
+    .filter(t => !t.isHidden && !hiddenCategoryIds.includes(t.categoryId))
+    .filter(t => {
+      if (aiRoadmapFilter && aiRoadmapFilter.ids) {
+        return aiRoadmapFilter.ids.includes(t.id);
+      }
+      return true;
+    })
+    .map((tech) => ({
+      ...tech,
+      status: userTechStatus[tech.id] || tech.status
+    })).filter((tech) => {
+      const matchesSearch = tech.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        tech.simpleMetaphor.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        tech.technicalExplanation.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesStatus = statusFilter === 'all' || tech.status === statusFilter;
 
-    return matchesSearch && matchesStatus;
-  });
+      return matchesSearch && matchesStatus;
+    });
 
-  const activeCategory = categories.find((c) => c.id === selectedCategoryId);
-  const isGlobalFilterActive = statusFilter !== 'all' || searchQuery.trim() !== '';
+  const activeCategory = initialCategories.find((c) => c.id === selectedCategoryId);
+  const isGlobalFilterActive = statusFilter !== 'all' || searchQuery.trim() !== '' || Boolean(aiRoadmapFilter);
+
+  // Portal candidate list for search dropdown
+  const portalCandidates = techList.filter(t => 
+    !newCard.connections.includes(t.id) &&
+    t.title.toLowerCase().includes(portalSearch.toLowerCase())
+  );
 
   return (
     <div className={`min-h-screen flex flex-col justify-between font-sans transition-colors duration-300 relative ${
@@ -186,20 +364,60 @@ export default function App() {
         : 'bg-slate-50 text-slate-900 selection:bg-blue-500 selection:text-white'
     }`}>
       
-      {/* OVERLAY ANIMATED HUD NOTIFIER */}
+      {/* HUD NOTIFIER */}
       {modeNotification && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-150">
-          <div className="bg-slate-900/90 border border-purple-500/40 rounded-3xl p-6 sm:p-8 text-center max-w-sm shadow-2xl shadow-purple-950/50 transform animate-in zoom-in-95 duration-200">
+          <div className="bg-slate-900/90 border border-purple-500/40 rounded-3xl p-6 text-center max-w-sm shadow-2xl shadow-purple-950/50">
             <span className="text-4xl mb-3 block animate-bounce">{modeNotification.icon}</span>
-            <h3 className="text-xl font-extrabold text-white tracking-tight mb-1">
-              {modeNotification.title}
-            </h3>
-            <p className="text-slate-300 text-xs font-medium leading-relaxed">
-              {modeNotification.subtitle}
-            </p>
+            <h3 className="text-xl font-extrabold text-white tracking-tight mb-1">{modeNotification.title}</h3>
+            <p className="text-slate-300 text-xs font-medium leading-relaxed">{modeNotification.subtitle}</p>
           </div>
         </div>
       )}
+
+      {/* CONFIRMATION MODAL FOR RESTORE DEFAULTS */}
+      {showRestoreConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-150">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full text-center shadow-2xl">
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mx-auto mb-3">
+              <AlertTriangle className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-white mb-2">Reset to Default Settings?</h3>
+            <p className="text-xs text-slate-400 mb-6 leading-relaxed">
+              This will restore all default technologies and category visibility, but <strong className="text-slate-200">will permanently delete all your custom created cards</strong>.
+            </p>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setShowRestoreConfirm(false)}
+                className="flex-1 py-2 px-4 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmResetToDefaults}
+                className="flex-1 py-2 px-4 rounded-xl text-xs font-bold bg-red-600 hover:bg-red-500 text-white transition shadow-lg shadow-red-950/50"
+              >
+                Yes, Restore All
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* AI CAREER ROADMAP MODAL */}
+      <CareerQuizModal
+        isOpen={isAiModalOpen}
+        onClose={() => {
+          setIsAiModalOpen(false);
+          localStorage.setItem('techmap-ai-completed', 'true');
+        }}
+        techList={techList}
+        onGenerateRoadmap={(filter) => {
+          setAiRoadmapFilter(filter);
+          setSelectedCategoryId(null);
+          localStorage.setItem('techmap-ai-completed', 'true');
+        }}
+      />
 
       {/* TOP CONTAINER */}
       <div className="flex-1 flex flex-col">
@@ -213,14 +431,14 @@ export default function App() {
             {/* Logo & Title */}
             <div className="flex items-center gap-2.5 shrink-0">
               <div 
-                onClick={() => { setSelectedCategoryId(null); setSearchQuery(''); setStatusFilter('all'); }}
+                onClick={() => { setViewMode('atlas'); setSelectedCategoryId(null); setSearchQuery(''); setStatusFilter('all'); setAiRoadmapFilter(null); }}
                 className="p-2 bg-gradient-to-tr from-purple-600 to-indigo-600 text-white rounded-xl shadow-md cursor-pointer shrink-0"
               >
                 <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
               <div>
                 <h1 
-                  onClick={() => { setSelectedCategoryId(null); setSearchQuery(''); setStatusFilter('all'); }}
+                  onClick={() => { setViewMode('atlas'); setSelectedCategoryId(null); setSearchQuery(''); setStatusFilter('all'); setAiRoadmapFilter(null); }}
                   className={`text-base sm:text-lg font-bold leading-none tracking-tight cursor-pointer ${isDarkMode ? 'text-white' : 'text-slate-900'}`}
                 >
                   TechMap
@@ -231,44 +449,57 @@ export default function App() {
               </div>
             </div>
 
-            {/* Right Action Controls */}
+            {/* Right Controls - UNIFIED HEIGHT (h-9) & MATCHING BORDER/BACKGROUND */}
             <div className="flex items-center gap-2 shrink-0">
               
-              {/* Dark / Light Theme Toggle Button (DESKTOP ONLY) */}
+              {/* ⚖️ COMPARE TOOLS BUTTON WITH DEGRADADO */}
+              {comparisons && comparisons.length > 0 && (
+                <button
+                  onClick={() => setShowComparisonBanner(!showComparisonBanner)}
+                  className={`h-9 px-3 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-md active:scale-95 ${
+                    showComparisonBanner
+                      ? 'bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 text-white border border-pink-400/40'
+                      : 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:to-pink-500 text-white shadow-indigo-950/40 border border-transparent'
+                  }`}
+                >
+                  <Scale className="w-3.5 h-3.5 text-indigo-200" />
+                  <span className="hidden sm:inline">Compare Tools</span>
+                </button>
+              )}
+
+              {/* 👤 ADMIN USER ICON (Mismo BG & Border que Light/Dark mode) */}
+              <button
+                onClick={() => setViewMode(viewMode === 'atlas' ? 'admin' : 'atlas')}
+                className={`h-9 w-9 rounded-xl transition-all border active:scale-95 flex items-center justify-center shrink-0 ${
+                  isDarkMode 
+                    ? 'bg-slate-800 border-slate-700' 
+                    : 'bg-slate-100 border-slate-200'
+                }`}
+                title={viewMode === 'admin' ? "Exit Admin Portal" : "Enter Admin Portal"}
+              >
+                <User className="w-4 h-4 text-amber-400" />
+              </button>
+
+              {/* Theme Toggle */}
               <button
                 onClick={() => setIsDarkMode(!isDarkMode)}
-                title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-                className={`hidden sm:flex p-1.5 rounded-xl border transition-all active:scale-95 shrink-0 ${
-                  isDarkMode 
-                    ? 'bg-slate-800 text-amber-400 border-slate-700 hover:bg-slate-700' 
-                    : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
+                className={`hidden sm:flex h-9 w-9 items-center justify-center rounded-xl border transition-all active:scale-95 shrink-0 ${
+                  isDarkMode ? 'bg-slate-800 text-amber-400 border-slate-700' : 'bg-slate-100 text-slate-700 border-slate-200'
                 }`}
               >
                 {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </button>
 
-              {/* Playbooks Button */}
-              {comparisons && comparisons.length > 0 && (
-                <button
-                  onClick={() => setIsComparisonsOpen(!isComparisonsOpen)}
-                  className="px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 shadow-md shadow-purple-900/20 transition-all flex items-center gap-1.5 border border-purple-400/30 active:scale-95"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse shrink-0" />
-                  <span>Playbooks</span>
-                </button>
-              )}
-
-              {/* Simple / Technical Toggle Switch */}
-              <div className={`flex items-center gap-0.5 p-1 rounded-xl border ${
+              {/* Simple / Technical Toggle */}
+              <div className={`h-9 flex items-center gap-0.5 p-1 rounded-xl border ${
                 isDarkMode ? 'bg-slate-800/80 border-slate-700/60' : 'bg-slate-100 border-slate-200'
               }`}>
                 <button
                   onClick={() => handleModeSwitch(true)}
-                  title="Simple Explanation Mode"
-                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
+                  className={`h-full px-2.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
                     isSimpleMode
-                      ? isDarkMode ? 'bg-slate-700 text-white shadow-xs' : 'bg-white text-slate-900 shadow-xs'
-                      : isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-500 hover:text-slate-900'
+                      ? isDarkMode ? 'bg-slate-700 text-white' : 'bg-white text-slate-900'
+                      : 'text-slate-400 hover:text-white'
                   }`}
                 >
                   <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
@@ -277,11 +508,10 @@ export default function App() {
 
                 <button
                   onClick={() => handleModeSwitch(false)}
-                  title="Technical Specifications Mode"
-                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
+                  className={`h-full px-2.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
                     !isSimpleMode
-                      ? isDarkMode ? 'bg-slate-700 text-white shadow-xs' : 'bg-white text-slate-900 shadow-xs'
-                      : isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-500 hover:text-slate-900'
+                      ? isDarkMode ? 'bg-slate-700 text-white' : 'bg-white text-slate-900'
+                      : 'text-slate-400 hover:text-white'
                   }`}
                 >
                   <Zap className="w-3.5 h-3.5 text-blue-400" />
@@ -291,434 +521,664 @@ export default function App() {
 
             </div>
           </div>
-
-          {/* Expandable Comparisons Panel */}
-          {isComparisonsOpen && (
-            <div className={`backdrop-blur-xl border-b shadow-2xl p-4 animate-in slide-in-from-top-2 duration-200 ${
-              isDarkMode ? 'bg-slate-900/95 border-indigo-500/20' : 'bg-slate-900 text-white border-indigo-900/50'
-            }`}>
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2 text-indigo-400 text-xs font-bold uppercase tracking-wider">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Interactive Playbooks & Stacks
-                  </div>
-                  <button 
-                    onClick={() => setIsComparisonsOpen(false)}
-                    className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {comparisons.map((comp) => (
-                    <button
-                      key={comp.id}
-                      onClick={() => {
-                        setActiveComparison(comp);
-                        setIsComparisonsOpen(false);
-                      }}
-                      className="px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/80 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 group text-slate-200 hover:text-white"
-                    >
-                      <span className="truncate max-w-[240px] sm:max-w-none">{comp.title}</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 text-indigo-400 shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
         </header>
 
-        {/* 2. Metrics & Search Hub */}
-        <section className="shrink-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-3 pb-2 w-full">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 mb-2.5">
-            <div>
-              <h2 className={`text-lg sm:text-xl font-extrabold tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-                {isGlobalFilterActive 
-                  ? `Filtered View (${filteredTechnologies.length} results)`
-                  : selectedCategoryId && activeCategory 
-                    ? activeCategory.title 
-                    : 'Atlas & Categories'}
-              </h2>
-              <p className={`text-[11px] ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
-                {isGlobalFilterActive
-                  ? 'Showing all matching technologies across all categories.'
-                  : selectedCategoryId 
-                    ? 'Showing technologies for this domain. Select a card to teleport to connected tools.'
-                    : 'Select a category to explore its technologies, metaphors, and cross-domain connections.'}
-              </p>
-            </div>
-
-            {/* Clean Search Input */}
-            <div className="relative min-w-[220px] sm:min-w-[280px]">
-              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Search tools, terms, metaphors..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={`w-full pl-9 pr-3 py-1.5 border rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition-all ${
-                  isDarkMode 
-                    ? 'bg-slate-900 border-slate-800 text-slate-200 placeholder:text-slate-500 focus:border-purple-500 shadow-inner' 
-                    : 'bg-white border-slate-200 text-slate-800 placeholder:text-slate-400 focus:border-blue-500 shadow-2xs'
-                }`}
-              />
+        {/* 2. TOP BANNER DE COMPARACIONES (CON FLEX-WRAP Y SIN BOTÓN X) */}
+        {showComparisonBanner && comparisons && comparisons.length > 0 && (
+          <div className="bg-slate-900/95 border-b border-indigo-500/30 p-3.5 animate-in slide-in-from-top duration-200">
+            <div className="max-w-7xl mx-auto px-4">
+              <div className="flex flex-wrap items-center gap-2.5 py-1">
+                <span className="text-xs font-extrabold text-indigo-400 uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1.5">
+                  <Scale className="w-4 h-4" /> Comparisons:
+                </span>
+                {comparisons.map((comp) => (
+                  <button
+                    key={comp.id}
+                    onClick={() => {
+                      setActiveComparison(comp);
+                      setShowComparisonBanner(false);
+                    }}
+                    className="px-3.5 py-1.5 bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/40 text-indigo-200 rounded-xl text-xs font-bold transition active:scale-95 shadow-sm"
+                  >
+                    {comp.title}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
+        )}
 
-          {/* CLICKABLE INTERACTIVE PILL FILTERS */}
-          <div className="flex flex-wrap items-center gap-2">
-            {/* Pill 1: I Know */}
-            <button
-              onClick={() => handlePillFilterClick('i-know')}
-              className={`border rounded-xl px-3 py-1.5 flex items-center gap-2 transition-all active:scale-95 cursor-pointer select-none ${
-                statusFilter === 'i-know'
-                  ? 'bg-emerald-500 text-slate-950 font-extrabold border-emerald-400 ring-2 ring-emerald-500/40 shadow-lg shadow-emerald-950/50'
-                  : isDarkMode 
-                    ? 'bg-emerald-950/40 border-emerald-800/40 hover:border-emerald-500/60 text-emerald-300' 
-                    : 'bg-emerald-50 border-emerald-200 hover:border-emerald-300 text-slate-700'
-              }`}
-            >
-              <div className={`w-2 h-2 rounded-full ${
-                statusFilter === 'i-know' ? 'bg-slate-950' : 'bg-emerald-400 shadow-xs shadow-emerald-400/50'
-              }`} />
-              <span className="text-xs font-bold">I Know: {counts.iKnow}</span>
-            </button>
+        {/* 3. ADMIN PANEL VIEW */}
+        {viewMode === 'admin' && (
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full animate-in fade-in duration-200">
+            
+            {/* Create Custom Card Form */}
+            <div className={`border rounded-2xl p-5 sm:p-6 mb-8 ${
+              isDarkMode ? 'bg-slate-900/90 border-slate-800' : 'bg-white border-slate-200'
+            }`}>
+              <div className="flex items-center justify-between mb-4 border-b pb-3 border-slate-800">
+                <div className="flex items-center gap-2">
+                  <Crown className="w-5 h-5 text-amber-400" />
+                  <h2 className="text-lg font-bold text-white">Create Premium Custom Card</h2>
+                </div>
 
-            {/* Pill 2: Learning */}
-            <button
-              onClick={() => handlePillFilterClick('learning')}
-              className={`border rounded-xl px-3 py-1.5 flex items-center gap-2 transition-all active:scale-95 cursor-pointer select-none ${
-                statusFilter === 'learning'
-                  ? 'bg-amber-400 text-slate-950 font-extrabold border-amber-300 ring-2 ring-amber-400/40 shadow-lg shadow-amber-950/50'
-                  : isDarkMode 
-                    ? 'bg-amber-950/40 border-amber-800/40 hover:border-amber-500/60 text-amber-300' 
-                    : 'bg-amber-50 border-amber-200 hover:border-amber-300 text-slate-700'
-              }`}
-            >
-              <div className={`w-2 h-2 rounded-full ${
-                statusFilter === 'learning' ? 'bg-slate-950' : 'bg-amber-400 shadow-xs shadow-amber-400/50'
-              }`} />
-              <span className="text-xs font-bold">Learning: {counts.learning}</span>
-            </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowRestoreConfirm(true)}
+                    className="px-2.5 py-1 text-[11px] font-bold text-slate-400 hover:text-red-300 bg-slate-800 hover:bg-red-950/40 border border-slate-700 hover:border-red-800/50 rounded-lg transition flex items-center gap-1"
+                    title="Restore default technologies"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    <span>Restore Defaults</span>
+                  </button>
+                  
+                  <span className="text-xs font-mono bg-amber-500/10 text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded-lg">
+                    Premium Tier
+                  </span>
+                </div>
+              </div>
 
-            {/* Pill 3: To Explore */}
-            <button
-              onClick={() => handlePillFilterClick('to-explore')}
-              className={`border rounded-xl px-3 py-1.5 flex items-center gap-2 transition-all active:scale-95 cursor-pointer select-none ${
-                statusFilter === 'to-explore'
-                  ? 'bg-slate-200 text-slate-950 font-extrabold border-white ring-2 ring-white/40 shadow-lg'
-                  : isDarkMode 
-                    ? 'bg-slate-900 border-slate-800 hover:border-slate-700 text-slate-300' 
-                    : 'bg-slate-100 border-slate-200 hover:border-slate-300 text-slate-600'
-              }`}
-            >
-              <div className={`w-2 h-2 rounded-full ${
-                statusFilter === 'to-explore' ? 'bg-slate-950' : 'bg-slate-400'
-              }`} />
-              <span className="text-xs font-bold">To Explore: {counts.toExplore}</span>
-            </button>
+              <form onSubmit={handleAddCard} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 mb-1">Technology Title *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Supabase, Astro, Prisma"
+                    value={newCard.title}
+                    onChange={(e) => setNewCard({ ...newCard, title: e.target.value })}
+                    className={`w-full px-3 py-2 border rounded-xl text-xs font-medium focus:outline-none ${
+                      isDarkMode ? 'bg-slate-950 border-slate-800 text-white' : 'bg-slate-50 border-slate-200'
+                    }`}
+                  />
+                </div>
 
-            {/* Clear Filter Badge (shows when a status filter or search is active) */}
-            {isGlobalFilterActive && (
-              <button
-                onClick={() => { setStatusFilter('all'); setSearchQuery(''); }}
-                className="px-2.5 py-1 text-[11px] font-bold text-purple-400 hover:text-purple-300 bg-purple-950/40 border border-purple-500/30 rounded-xl transition flex items-center gap-1"
-              >
-                <span>Reset filter</span>
-                <X className="w-3 h-3" />
-              </button>
-            )}
-          </div>
-        </section>
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 mb-1">Category Domain *</label>
+                  <select
+                    value={newCard.categoryId}
+                    onChange={(e) => setNewCard({ ...newCard, categoryId: e.target.value })}
+                    className={`w-full px-3 py-2 border rounded-xl text-xs font-bold cursor-pointer focus:outline-none ${
+                      isDarkMode ? 'bg-slate-950 border-slate-800 text-white' : 'bg-slate-50 border-slate-200'
+                    }`}
+                  >
+                    {initialCategories.map(cat => (
+                      <option key={cat.id} value={cat.id}>{cat.title}</option>
+                    ))}
+                  </select>
+                </div>
 
-        {/* 3. MAIN DYNAMIC CONTENT AREA */}
-        <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-2 flex flex-col justify-stretch">
-          
-          {/* VIEW 1: CATEGORIES GRID (Active when no category is selected AND no global filter/search is active) */}
-          {!selectedCategoryId && !isGlobalFilterActive && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-3.5 animate-in fade-in duration-200 min-h-[calc(100vh-250px)] h-full">
-              {categories.map((category) => {
-                const categoryTechsCount = technologies.filter((t) => t.categoryId === category.id).length;
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 mb-1">
+                    SimpleIcons Slug / Icon ID <span className="text-slate-500 font-normal">(Optional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. react, svelte, postgresql"
+                    value={newCard.iconSlug}
+                    onChange={(e) => setNewCard({ ...newCard, iconSlug: e.target.value })}
+                    className={`w-full px-3 py-2 border rounded-xl text-xs font-medium focus:outline-none ${
+                      isDarkMode ? 'bg-slate-950 border-slate-800 text-white' : 'bg-slate-50 border-slate-200'
+                    }`}
+                  />
+                </div>
+
+                <div className="md:col-span-3">
+                  <label className="block text-xs font-bold text-slate-400 mb-1">Simple Metaphor / Explanation *</label>
+                  <textarea
+                    required
+                    rows="2"
+                    placeholder="Explain it with a simple everyday metaphor..."
+                    value={newCard.simpleMetaphor}
+                    onChange={(e) => setNewCard({ ...newCard, simpleMetaphor: e.target.value })}
+                    className={`w-full px-3 py-2 border rounded-xl text-xs font-medium focus:outline-none ${
+                      isDarkMode ? 'bg-slate-950 border-slate-800 text-white' : 'bg-slate-50 border-slate-200'
+                    }`}
+                  />
+                </div>
+
+                <div className="md:col-span-3">
+                  <label className="block text-xs font-bold text-slate-400 mb-1">Technical Architecture Specs <span className="text-slate-500 font-normal">(Optional)</span></label>
+                  <textarea
+                    rows="2"
+                    placeholder="Technical overview for engineers..."
+                    value={newCard.technicalExplanation}
+                    onChange={(e) => setNewCard({ ...newCard, technicalExplanation: e.target.value })}
+                    className={`w-full px-3 py-2 border rounded-xl text-xs font-medium focus:outline-none ${
+                      isDarkMode ? 'bg-slate-950 border-slate-800 text-white' : 'bg-slate-50 border-slate-200'
+                    }`}
+                  />
+                </div>
+
+                {/* MULTI-PORTAL RELATIONSHIPS SEARCH & CHIPS */}
+                <div className="md:col-span-3 border-t border-slate-800/80 pt-3">
+                  <label className="block text-xs font-bold text-slate-400 mb-1">
+                    Portal Connections (Link to Existing Tools):
+                  </label>
+
+                  {/* Added Portals Chips */}
+                  <div className="flex flex-wrap gap-1.5 mb-2.5">
+                    {newCard.connections.map((connId) => {
+                      const connectedTech = techList.find(t => t.id === connId);
+                      return (
+                        <span
+                          key={connId}
+                          className="px-2.5 py-1 bg-purple-950/60 border border-purple-500/40 text-purple-200 rounded-lg text-xs font-bold flex items-center gap-1.5"
+                        >
+                          <TechLogo tech={connectedTech || connId} className="w-3 h-3" />
+                          <span>{connectedTech?.title || connId}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveConnection(connId)}
+                            className="hover:text-red-400 transition"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </span>
+                      );
+                    })}
+                  </div>
+
+                  {/* Search Input for Candidate Portals */}
+                  <div className="relative max-w-md">
+                    <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type="text"
+                      placeholder="Search tech to link as a portal..."
+                      value={portalSearch}
+                      onChange={(e) => setPortalSearch(e.target.value)}
+                      className={`w-full pl-9 pr-3 py-1.5 border rounded-xl text-xs font-medium focus:outline-none ${
+                        isDarkMode ? 'bg-slate-950 border-slate-800 text-white' : 'bg-slate-50 border-slate-200'
+                      }`}
+                    />
+
+                    {/* Candidate Search Dropdown */}
+                    {portalSearch.trim() !== '' && (
+                      <div className="absolute top-full left-0 right-0 mt-1 z-20 bg-slate-900 border border-slate-800 rounded-xl shadow-xl max-h-40 overflow-y-auto p-1">
+                        {portalCandidates.length > 0 ? (
+                          portalCandidates.map((tech) => (
+                            <button
+                              key={tech.id}
+                              type="button"
+                              onClick={() => handleAddConnection(tech.id)}
+                              className="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-purple-600 hover:text-white rounded-lg flex items-center justify-between transition"
+                            >
+                              <div className="flex items-center gap-2">
+                                <TechLogo tech={tech} className="w-3.5 h-3.5" />
+                                <span>{tech.title}</span>
+                              </div>
+                              <Plus className="w-3.5 h-3.5 text-purple-400" />
+                            </button>
+                          ))
+                        ) : (
+                          <div className="px-3 py-2 text-xs text-slate-500">No matching tech found.</div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="md:col-span-3 flex justify-end pt-2">
+                  <button
+                    type="submit"
+                    className="px-4 py-2.5 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-2 active:scale-95 transition"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Create Custom Card</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            {/* CATEGORY-BASED VISIBILITY & MANAGEMENT */}
+            <div className="space-y-6">
+              <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">
+                Category Visibility & Card Management ({techList.length} Total Cards)
+              </h3>
+
+              {initialCategories.map((category) => {
+                const categoryCards = techList.filter(t => t.categoryId === category.id);
+                const isCategoryHidden = hiddenCategoryIds.includes(category.id);
 
                 return (
                   <div
                     key={category.id}
-                    onClick={() => setSelectedCategoryId(category.id)}
-                    className={`group relative rounded-2xl overflow-hidden border cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl flex flex-col items-center justify-center p-4 text-center h-full ${
-                      isDarkMode 
-                        ? 'bg-slate-900 border-slate-800 hover:border-purple-500/50 shadow-lg' 
-                        : 'bg-white border-slate-200 hover:border-blue-400 shadow-xs'
+                    className={`border rounded-2xl overflow-hidden transition ${
+                      isCategoryHidden 
+                        ? 'border-red-900/40 bg-slate-950/40 opacity-70' 
+                        : isDarkMode ? 'bg-slate-900/80 border-slate-800' : 'bg-white border-slate-200'
                     }`}
                   >
-                    {/* Background Image Restored with Smooth Overlay */}
-                    <img 
-                      src={category.image} 
-                      alt={category.title} 
-                      className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className={`absolute inset-0 bg-gradient-to-t ${
-                      isDarkMode ? 'from-slate-950 via-slate-950/80 to-slate-950/40' : 'from-slate-900/90 via-slate-900/60 to-transparent'
-                    }`} />
+                    {/* CATEGORY HEADER CONTROL */}
+                    <div className="p-4 flex items-center justify-between border-b border-slate-800/80 bg-slate-900/90">
+                      <div className="flex items-center gap-3">
+                        <span className={`w-2.5 h-2.5 rounded-full ${isCategoryHidden ? 'bg-red-500' : 'bg-emerald-400'}`} />
+                        <h4 className="text-sm font-extrabold text-white">{category.title}</h4>
+                        <span className="text-xs font-mono font-bold text-slate-500">({categoryCards.length} cards)</span>
+                      </div>
 
-                    {/* Absolute Positioned Badges so Title sits DEAD CENTER */}
-                    <span className="absolute top-3 left-3 z-10 text-[10px] font-mono font-bold text-slate-200 bg-slate-950/80 border border-slate-700/60 backdrop-blur-md px-2 py-0.5 rounded-lg">
-                      {categoryTechsCount} tools
-                    </span>
-
-                    <div className="absolute top-3 right-3 z-10 w-6 h-6 rounded-lg bg-white/10 group-hover:bg-purple-600 border border-white/20 backdrop-blur-md flex items-center justify-center text-white transition-all duration-300">
-                      <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                      {/* MASTER TOGGLE ENTIRE CATEGORY */}
+                      <button
+                        onClick={() => toggleCategoryVisibility(category.id)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition flex items-center gap-1.5 ${
+                          isCategoryHidden
+                            ? 'bg-red-950/40 text-red-300 border-red-800/50 hover:bg-red-900/60'
+                            : 'bg-emerald-950/40 text-emerald-300 border-emerald-800/50 hover:bg-emerald-900/60'
+                        }`}
+                      >
+                        {isCategoryHidden ? (
+                          <>
+                            <FolderMinus className="w-3.5 h-3.5" />
+                            <span>Category Hidden</span>
+                          </>
+                        ) : (
+                          <>
+                            <FolderCheck className="w-3.5 h-3.5" />
+                            <span>Category Visible</span>
+                          </>
+                        )}
+                      </button>
                     </div>
 
-                    {/* DEAD-CENTERED TITLE */}
-                    <div className="relative z-10 px-2 my-auto flex items-center justify-center">
-                      <h3 className="text-xs sm:text-sm font-extrabold text-white tracking-tight leading-snug drop-shadow-md group-hover:text-purple-300 transition-colors text-center">
-                        {category.title}
-                      </h3>
+                    {/* CARDS LIST INSIDE CATEGORY */}
+                    <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {categoryCards.map((tech) => (
+                        <div
+                          key={tech.id}
+                          className={`p-3 rounded-xl border flex items-center justify-between transition ${
+                            tech.isHidden || isCategoryHidden
+                              ? 'bg-slate-950/60 border-slate-900 opacity-60'
+                              : isDarkMode ? 'bg-slate-950/40 border-slate-800' : 'bg-slate-50 border-slate-200'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5 truncate">
+                            <div className="p-1.5 bg-slate-800 rounded-lg shrink-0">
+                              <TechLogo tech={tech} className="w-4 h-4" />
+                            </div>
+                            <div className="truncate">
+                              <div className="flex items-center gap-1.5">
+                                <h5 className="text-xs font-bold text-white truncate">{tech.title}</h5>
+                                {tech.isCustom && (
+                                  <span className="px-1.5 py-0.2 text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded">
+                                    Custom
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-[10px] text-slate-500 truncate">{tech.id}</p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {/* Hide / Show Card Button */}
+                            <button
+                              onClick={() => toggleCardVisibility(tech.id)}
+                              className={`p-1.5 rounded-lg border transition ${
+                                tech.isHidden
+                                  ? 'bg-amber-950/30 text-amber-400 border-amber-900/50 hover:bg-amber-900/50'
+                                  : 'bg-emerald-950/30 text-emerald-400 border-emerald-900/50 hover:bg-emerald-900/50'
+                              }`}
+                              title={tech.isHidden ? "Click to Show in Atlas" : "Click to Hide in Atlas"}
+                            >
+                              {tech.isHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                            </button>
+
+                            {/* DELETE BUTTON (ONLY FOR CUSTOM CARDS) */}
+                            {tech.isCustom && (
+                              <button
+                                onClick={() => handleDeleteCustomCard(tech.id)}
+                                className="p-1.5 rounded-lg border bg-red-950/40 text-red-400 border-red-900/50 hover:bg-red-900/80 transition"
+                                title="Delete Custom Card"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 );
               })}
             </div>
-          )}
+          </section>
+        )}
 
-          {/* VIEW 2: MULTI-CATEGORY UNROLLED VIEW (Active when a Category is picked OR a Filter/Search is active) */}
-          {(selectedCategoryId || isGlobalFilterActive) && (
-            <div className="flex flex-col gap-4 animate-in fade-in duration-200 pb-4">
-              {categories
-                .filter((cat) => isGlobalFilterActive ? true : cat.id === selectedCategoryId)
-                .map((category) => {
-                  const categoryTechs = filteredTechnologies.filter(
-                    (t) => t.categoryId === category.id
-                  );
+        {/* 4. PUBLIC ATLAS VIEW */}
+        {viewMode === 'atlas' && (
+          <>
+            {/* Hub Controls */}
+            <section className="shrink-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-3 pb-2 w-full">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 mb-2.5">
+                <div>
+                  <h2 className={`text-lg sm:text-xl font-extrabold tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                    {isGlobalFilterActive 
+                      ? `Filtered View (${filteredTechnologies.length} results)`
+                      : selectedCategoryId && activeCategory 
+                        ? activeCategory.title 
+                        : 'Atlas & Categories'}
+                  </h2>
+                  <p className={`text-[11px] ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                    {isGlobalFilterActive
+                      ? 'Showing all matching technologies across all categories.'
+                      : selectedCategoryId 
+                        ? 'Showing technologies for this domain. Select a card to teleport to connected tools.'
+                        : 'Select a category to explore its technologies, metaphors, and cross-domain connections.'}
+                  </p>
+                </div>
 
-                  if (categoryTechs.length === 0) return null;
+                <div className="relative min-w-[220px] sm:min-w-[280px]">
+                  <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="Search tools, terms, metaphors..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className={`w-full pl-9 pr-3 py-1.5 border rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition-all ${
+                      isDarkMode 
+                        ? 'bg-slate-900 border-slate-800 text-slate-200 placeholder:text-slate-500 focus:border-purple-500' 
+                        : 'bg-white border-slate-200 text-slate-800'
+                    }`}
+                  />
+                </div>
+              </div>
 
-                  return (
-                    <section 
-                      key={category.id} 
-                      className={`border rounded-2xl overflow-hidden shadow-xl transition-all duration-300 ${
-                        isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
-                      }`}
-                    >
-                      {/* Category Title Header with Integrated "Back to Categories" Button */}
-                      <div className="relative overflow-hidden h-16 sm:h-20 flex items-center justify-between p-4 select-none">
+              {/* Filter Pills */}
+              <div className="flex flex-wrap items-center gap-2 mb-3">
+                <button
+                  onClick={() => handlePillFilterClick('i-know')}
+                  className={`border rounded-xl px-3 py-1.5 flex items-center gap-2 transition-all cursor-pointer ${
+                    statusFilter === 'i-know'
+                      ? 'bg-emerald-500 text-slate-950 font-extrabold border-emerald-400'
+                      : 'bg-emerald-950/40 border-emerald-800/40 text-emerald-300'
+                  }`}
+                >
+                  <div className={`w-2 h-2 rounded-full ${statusFilter === 'i-know' ? 'bg-slate-950' : 'bg-emerald-400'}`} />
+                  <span className="text-xs font-bold">I Know: {counts.iKnow}</span>
+                </button>
+
+                <button
+                  onClick={() => handlePillFilterClick('learning')}
+                  className={`border rounded-xl px-3 py-1.5 flex items-center gap-2 transition-all cursor-pointer ${
+                    statusFilter === 'learning'
+                      ? 'bg-amber-400 text-slate-950 font-extrabold border-amber-300'
+                      : 'bg-amber-950/40 border-amber-800/40 text-amber-300'
+                  }`}
+                >
+                  <div className={`w-2 h-2 rounded-full ${statusFilter === 'learning' ? 'bg-slate-950' : 'bg-amber-400'}`} />
+                  <span className="text-xs font-bold">Learning: {counts.learning}</span>
+                </button>
+
+                <button
+                  onClick={() => handlePillFilterClick('to-explore')}
+                  className={`border rounded-xl px-3 py-1.5 flex items-center gap-2 transition-all cursor-pointer ${
+                    statusFilter === 'to-explore'
+                      ? 'bg-slate-200 text-slate-950 font-extrabold border-white'
+                      : 'bg-slate-900 border-slate-800 text-slate-300'
+                  }`}
+                >
+                  <div className={`w-2 h-2 rounded-full ${statusFilter === 'to-explore' ? 'bg-slate-950' : 'bg-slate-400'}`} />
+                  <span className="text-xs font-bold">To Explore: {counts.toExplore}</span>
+                </button>
+
+                {isGlobalFilterActive && (
+                  <button
+                    onClick={() => { setStatusFilter('all'); setSearchQuery(''); setAiRoadmapFilter(null); }}
+                    className="px-2.5 py-1 text-[11px] font-bold text-purple-400 hover:text-purple-300 bg-purple-950/40 border border-purple-500/30 rounded-xl flex items-center gap-1"
+                  >
+                    <span>Reset filter</span>
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
+
+              {/* AI ROADMAP ACTIVE HUD BANNER */}
+              {aiRoadmapFilter && (
+                <div className="bg-gradient-to-r from-purple-900/80 to-indigo-900/80 border border-purple-500/40 rounded-2xl p-4 mb-4 flex items-center justify-between animate-in fade-in duration-200">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 bg-purple-600 rounded-xl text-white shrink-0">
+                      <Sparkles className="w-5 h-5 animate-pulse" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-white">
+                        AI Track: {aiRoadmapFilter.title}
+                      </h3>
+                      <p className="text-xs text-purple-200">
+                        {aiRoadmapFilter.reasoning}
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => setAiRoadmapFilter(null)}
+                    className="px-3 py-1.5 bg-slate-900/80 hover:bg-slate-900 text-xs font-bold text-slate-300 rounded-xl border border-slate-700 flex items-center gap-1.5 active:scale-95 transition shrink-0"
+                  >
+                    <span>Clear AI Filter</span>
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+            </section>
+
+            {/* Atlas Cards Container */}
+            <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-2 flex flex-col justify-stretch">
+              
+              {/* Home Category Grid (Excludes Hidden Categories) */}
+              {!selectedCategoryId && !isGlobalFilterActive && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-3.5 animate-in fade-in duration-200 min-h-[calc(100vh-250px)] h-full">
+                  {visibleCategories.map((category) => {
+                    const categoryTechsCount = techList.filter((t) => t.categoryId === category.id && !t.isHidden).length;
+
+                    return (
+                      <div
+                        key={category.id}
+                        onClick={() => setSelectedCategoryId(category.id)}
+                        className={`group relative rounded-2xl overflow-hidden border cursor-pointer transition-all duration-300 hover:-translate-y-0.5 flex flex-col items-center justify-center p-4 text-center h-full ${
+                          isDarkMode ? 'bg-slate-900 border-slate-800 hover:border-purple-500/50' : 'bg-white border-slate-200'
+                        }`}
+                      >
                         <img 
                           src={category.image} 
                           alt={category.title} 
-                          className={`absolute inset-0 w-full h-full object-cover ${
-                            isDarkMode ? 'opacity-40' : 'opacity-80'
-                          }`}
+                          className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-500"
                         />
                         <div className={`absolute inset-0 bg-gradient-to-t ${
-                          isDarkMode ? 'from-slate-950 via-slate-950/80 to-transparent' : 'from-black/80 via-black/40 to-transparent'
+                          isDarkMode ? 'from-slate-950 via-slate-950/80 to-slate-950/40' : 'from-slate-900/90 via-slate-900/60 to-transparent'
                         }`} />
 
-                        <div className="relative z-10 flex items-center gap-3">
-                          {/* BACK TO CATEGORIES BUTTON */}
-                          <button
-                            onClick={() => { setSelectedCategoryId(null); setSearchQuery(''); setStatusFilter('all'); }}
-                            className="px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white hover:bg-purple-600 hover:border-purple-500 backdrop-blur-md shadow-lg transition-all active:scale-95 flex items-center gap-1.5 font-bold text-xs shrink-0"
-                          >
-                            <ArrowLeft className="w-3.5 h-3.5 text-purple-300" />
-                            <span>Back to Categories</span>
-                          </button>
+                        <span className="absolute top-3 left-3 z-10 text-[10px] font-mono font-bold text-slate-200 bg-slate-950/80 border border-slate-700/60 backdrop-blur-md px-2 py-0.5 rounded-lg">
+                          {categoryTechsCount} tools
+                        </span>
 
-                          <div>
-                            <h2 className="text-sm sm:text-base font-extrabold text-white tracking-tight drop-shadow-md">
-                              {category.title}
-                            </h2>
-                            <p className={`text-[11px] font-bold ${isDarkMode ? 'text-slate-400' : 'text-slate-300'}`}>
-                              {categoryTechs.length} technologies listed
-                            </p>
-                          </div>
+                        <div className="absolute top-3 right-3 z-10 w-6 h-6 rounded-lg bg-white/10 group-hover:bg-purple-600 border border-white/20 backdrop-blur-md flex items-center justify-center text-white transition-all">
+                          <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                        </div>
+
+                        <div className="relative z-10 px-2 my-auto flex items-center justify-center">
+                          <h3 className="text-xs sm:text-sm font-extrabold text-white tracking-tight leading-snug drop-shadow-md text-center">
+                            {category.title}
+                          </h3>
                         </div>
                       </div>
+                    );
+                  })}
+                </div>
+              )}
 
-                      {/* 3 COLUMNS GRID INSIDE CATEGORY DETAIL */}
-                      <div className={`p-3.5 sm:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4 border-t ${
-                        isDarkMode ? 'bg-slate-950/60 border-slate-800' : 'bg-slate-50/30 border-slate-100'
-                      }`}>
-                        {categoryTechs.map((tech) => {
-                          const isSelected = selectedTechId === tech.id;
-                          const isConnected = selectedTechId && tech.connections?.includes(selectedTechId);
+              {/* Multi-Category Unrolled View */}
+              {(selectedCategoryId || isGlobalFilterActive) && (
+                <div className="flex flex-col gap-4 animate-in fade-in duration-200 pb-4">
+                  {visibleCategories
+                    .filter((cat) => isGlobalFilterActive ? true : cat.id === selectedCategoryId)
+                    .map((category) => {
+                      const categoryTechs = filteredTechnologies.filter((t) => t.categoryId === category.id);
+                      if (categoryTechs.length === 0) return null;
 
-                          return (
-                            <article
-                              key={tech.id}
-                              id={`tech-card-${tech.id}`}
-                              onClick={() => handleTechClick(tech.id)}
-                              className={`p-4 rounded-xl border transition-all duration-300 cursor-pointer relative flex flex-col justify-between group ${
-                                isSelected
-                                  ? isDarkMode 
-                                    ? 'bg-slate-900 border-purple-500 ring-2 ring-purple-500/30 shadow-xl shadow-purple-950/40 scale-[1.01] z-10' 
-                                    : 'bg-white border-blue-500 ring-4 ring-blue-500/10 shadow-md scale-[1.01] z-10'
-                                  : isConnected
-                                  ? isDarkMode 
-                                    ? 'bg-emerald-950/30 border-emerald-500/80 ring-2 ring-emerald-500/20 shadow-lg shadow-emerald-950/30 z-10' 
-                                    : 'bg-emerald-50/50 border-emerald-500 shadow-xs ring-4 ring-emerald-500/5 z-10'
-                                  : isDarkMode 
-                                    ? 'bg-slate-900/90 border-slate-800 hover:border-slate-700 hover:bg-slate-900' 
-                                    : 'bg-white border-slate-200/80 hover:border-slate-300 hover:shadow-2xs'
-                              }`}
-                            >
+                      return (
+                        <section 
+                          key={category.id} 
+                          className={`border rounded-2xl overflow-hidden shadow-xl ${
+                            isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
+                          }`}
+                        >
+                          <div className="relative overflow-hidden h-16 sm:h-20 flex items-center justify-between p-4 select-none">
+                            <img src={category.image} alt={category.title} className="absolute inset-0 w-full h-full object-cover opacity-40" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent" />
+
+                            <div className="relative z-10 flex items-center gap-3">
+                              <button
+                                onClick={() => { setSelectedCategoryId(null); setSearchQuery(''); setStatusFilter('all'); setAiRoadmapFilter(null); }}
+                                className="px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white hover:bg-purple-600 flex items-center gap-1.5 font-bold text-xs shrink-0"
+                              >
+                                <ArrowLeft className="w-3.5 h-3.5 text-purple-300" />
+                                <span>Back to Categories</span>
+                              </button>
+
                               <div>
-                                {/* Card Header (White SVG Logo + Neutral Container) */}
-                                <div className="flex items-center justify-between mb-2.5">
-                                  <div className="flex items-center gap-2.5">
-                                    <div className={`p-1.5 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
-                                      isDarkMode 
-                                        ? 'bg-slate-800/80 border-slate-700/60 shadow-inner group-hover:border-slate-600' 
-                                        : 'bg-slate-900 border-slate-800'
-                                    }`}>
-                                      <TechLogo id={tech.id} className="w-4 h-4" />
+                                <h2 className="text-sm sm:text-base font-extrabold text-white">{category.title}</h2>
+                                <p className="text-[11px] font-bold text-slate-400">{categoryTechs.length} technologies listed</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="p-3.5 sm:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 border-t border-slate-800 bg-slate-950/60">
+                            {categoryTechs.map((tech) => {
+                              const isSelected = selectedTechId === tech.id;
+                              const isConnected = selectedTechId && tech.connections?.includes(selectedTechId);
+
+                              return (
+                                <article
+                                  key={tech.id}
+                                  id={`tech-card-${tech.id}`}
+                                  onClick={() => handleTechClick(tech.id)}
+                                  className={`p-4 rounded-xl border transition-all cursor-pointer relative flex flex-col justify-between ${
+                                    isSelected
+                                      ? 'bg-slate-900 border-purple-500 ring-2 ring-purple-500/30'
+                                      : isConnected
+                                      ? 'bg-emerald-950/30 border-emerald-500/80 ring-2 ring-emerald-500/20 shadow-lg shadow-emerald-950/30'
+                                      : 'bg-slate-900/90 border-slate-800 hover:border-slate-700'
+                                  }`}
+                                >
+                                  <div>
+                                    <div className="flex items-center justify-between mb-2.5">
+                                      <div className="flex items-center gap-2.5">
+                                        <div className="p-1.5 rounded-lg border bg-slate-800 border-slate-700 flex items-center justify-center">
+                                          <TechLogo tech={tech} className="w-4 h-4" />
+                                        </div>
+
+                                        <h3 className="text-sm font-extrabold text-white">{tech.title}</h3>
+                                        
+                                        {tech.isCustom && (
+                                          <span className="px-1.5 py-0.5 text-[8px] font-extrabold rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30">
+                                            Custom
+                                          </span>
+                                        )}
+
+                                        {isConnected && (
+                                          <span className="px-1.5 py-0.5 text-[8px] font-extrabold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 animate-pulse">
+                                            Connected
+                                          </span>
+                                        )}
+                                      </div>
+
+                                      <button
+                                        onClick={(e) => handleToggleStatus(e, tech.id)}
+                                        className="w-5 h-5 rounded-full border border-slate-700 bg-slate-800 flex items-center justify-center"
+                                      >
+                                        {tech.status === 'i-know' && <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full" />}
+                                        {tech.status === 'learning' && <div className="w-2.5 h-2.5 bg-amber-400 rounded-full" />}
+                                        {tech.status === 'to-explore' && <div className="w-2.5 h-2.5 bg-slate-600 rounded-full" />}
+                                      </button>
                                     </div>
 
-                                    <h3 className={`text-sm font-extrabold tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-                                      {tech.title}
-                                    </h3>
-                                    {isConnected && (
-                                      <span className={`px-1.5 py-0.5 text-[8px] font-extrabold rounded-full border animate-pulse ${
-                                        isDarkMode 
-                                          ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' 
-                                          : 'bg-emerald-100 text-emerald-900 border-emerald-200'
-                                      }`}>
-                                        Connected
+                                    <p className="text-xs leading-relaxed mb-3 text-slate-300 font-normal">
+                                      {isSimpleMode ? tech.simpleMetaphor : tech.technicalExplanation}
+                                    </p>
+                                  </div>
+
+                                  {/* Connection Teleport Portal inside card */}
+                                  {isSelected && tech.connections && tech.connections.length > 0 && (
+                                    <div className="mt-2 pt-2 border-t border-slate-800">
+                                      <span className="text-[9px] font-bold uppercase tracking-wider block mb-1.5 text-slate-500">
+                                        Teleport Portal:
                                       </span>
-                                    )}
-                                  </div>
-
-                                  {/* Interactive Circle Selector */}
-                                  <button
-                                    onClick={(e) => handleToggleStatus(e, tech.id)}
-                                    title="Click to cycle status"
-                                    className={`w-5 h-5 rounded-full border flex items-center justify-center hover:scale-110 transition-transform ${
-                                      isDarkMode ? 'border-slate-700 bg-slate-800 shadow-inner' : 'border-slate-300 bg-white shadow-2xs'
-                                    }`}
-                                  >
-                                    {tech.status === 'i-know' && (
-                                      <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full shadow-xs shadow-emerald-400/50" />
-                                    )}
-                                    {tech.status === 'learning' && (
-                                      <div className="w-2.5 h-2.5 bg-amber-400 rounded-full shadow-xs shadow-amber-400/50" />
-                                    )}
-                                    {tech.status === 'to-explore' && (
-                                      <div className={`w-2.5 h-2.5 rounded-full ${isDarkMode ? 'bg-slate-600' : 'bg-slate-300'}`} />
-                                    )}
-                                  </button>
-                                </div>
-
-                                {/* Card Body */}
-                                <p className={`text-xs leading-relaxed mb-3 font-normal ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
-                                  {isSimpleMode ? tech.simpleMetaphor : tech.technicalExplanation}
-                                </p>
-                              </div>
-
-                              {/* Connection Portal Panel */}
-                              {isSelected && tech.connections && tech.connections.length > 0 && (
-                                <div className={`mt-2 pt-2 border-t ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
-                                  <span className={`text-[9px] font-bold uppercase tracking-wider block mb-1.5 ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>
-                                    Teleport Portal (Click to Jump):
-                                  </span>
-                                  <div className="flex flex-wrap gap-1.5">
-                                    {tech.connections.map((connId) => {
-                                      const target = technologies.find((t) => t.id === connId);
-                                      if (!target) return null;
-                                      return (
-                                        <button
-                                          key={connId}
-                                          onClick={(e) => handleTeleport(e, connId)}
-                                          className={`px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1.5 border transition active:scale-95 ${
-                                            isDarkMode 
-                                              ? 'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200 border-purple-500/30' 
-                                              : 'bg-blue-50 hover:bg-blue-100 text-blue-900 border-blue-200'
-                                          }`}
-                                        >
-                                          <TechLogo id={target.id} className="w-3 h-3" />
-                                          <span>{target.title}</span>
-                                          <ArrowRight className={`w-3 h-3 ${isDarkMode ? 'text-purple-400' : 'text-blue-400'}`} />
-                                        </button>
-                                      );
-                                    })}
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* Default Static Associated Techs */}
-                              {!isSelected && tech.worksWellWith && tech.worksWellWith.length > 0 && (
-                                <div className={`pt-2 border-t flex items-center gap-1.5 overflow-hidden ${isDarkMode ? 'border-slate-800/80' : 'border-slate-100'}`}>
-                                  <span className={`text-[9px] font-bold uppercase tracking-wider shrink-0 ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>
-                                    Integrates:
-                                  </span>
-                                  <div className="flex gap-1 overflow-x-auto scrollbar-none">
-                                    {tech.worksWellWith.slice(0, 3).map((item, idx) => (
-                                      <span
-                                        key={idx}
-                                        className={`px-2 py-0.5 rounded-md text-[9px] font-semibold border shrink-0 ${
-                                          isDarkMode 
-                                            ? 'bg-slate-800/60 text-slate-400 border-slate-700/40' 
-                                            : 'bg-slate-50 text-slate-500 border-slate-200/60'
-                                        }`}
-                                      >
-                                        {item}
-                                      </span>
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
-                            </article>
-                          );
-                        })}
-                      </div>
-                    </section>
-                  );
-              })}
-            </div>
-          )}
-
-        </main>
+                                      <div className="flex flex-wrap gap-1.5">
+                                        {tech.connections.map((connId) => {
+                                          const target = techList.find((t) => t.id === connId);
+                                          if (!target) return null;
+                                          return (
+                                            <button
+                                              key={connId}
+                                              onClick={(e) => handleTeleport(e, connId)}
+                                              className="px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1.5 bg-purple-950/60 hover:bg-purple-900/80 text-purple-200 border border-purple-500/30 transition active:scale-95"
+                                            >
+                                              <TechLogo tech={target} className="w-3 h-3" />
+                                              <span>{target.title}</span>
+                                              <ArrowRight className="w-3 h-3 text-purple-400" />
+                                            </button>
+                                          );
+                                        })}
+                                      </div>
+                                    </div>
+                                  )}
+                                </article>
+                              );
+                            })}
+                          </div>
+                        </section>
+                      );
+                    })}
+                </div>
+              )}
+            </main>
+          </>
+        )}
       </div>
 
-      {/* FOOTER AREA */}
+      {/* 🚀 BOTÓN FLOTANTE REDONDO AI TRACK */}
+      <button
+        onClick={() => setIsAiModalOpen(true)}
+        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-extrabold shadow-2xl shadow-purple-950/80 border border-purple-400/40 flex flex-col items-center justify-center gap-0.5 active:scale-90 transition-all group"
+        title="Open AI Career Roadmap Quiz"
+      >
+        <Sparkles className="w-5 h-5 text-purple-200 animate-pulse group-hover:rotate-12 transition-transform" />
+        <span className="text-xs font-black tracking-wider leading-none">AI</span>
+      </button>
+
+      {/* FOOTER */}
       <footer className={`border-t py-4 transition-colors duration-300 ${
         isDarkMode ? 'border-slate-800/80 bg-slate-950 text-slate-400' : 'border-slate-200 bg-white text-slate-600'
       }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <Layers className="w-4 h-4 text-purple-500" />
-            <span className="text-xs font-bold tracking-tight">TechMap &copy; 2026</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+          
+          {/* Left Side: Brand & Author */}
+          <div className="flex items-center gap-2 text-xs font-medium">
+            <Layers className="w-4 h-4 text-purple-500 shrink-0" />
+            <span>TechMap &copy; 2026</span>
+            <span className="text-slate-600 dark:text-slate-700">|</span>
+            <span className="text-slate-300 font-semibold">Created by Alessandro Torres</span>
           </div>
 
-          {/* Theme Switcher (MOBILE ONLY) */}
-          <button
-            onClick={() => setIsDarkMode(!isDarkMode)}
-            className={`flex sm:hidden px-3 py-1.5 rounded-xl border text-xs font-bold transition-all items-center gap-2 shadow-xs active:scale-95 ${
-              isDarkMode 
-                ? 'bg-slate-900 border-slate-800 text-amber-400 hover:bg-slate-800' 
-                : 'bg-slate-100 border-slate-200 text-slate-800 hover:bg-slate-200'
-            }`}
+          {/* Right Side: Portfolio External Link */}
+          <a
+            href="https://alessandrotorres.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-bold text-purple-400 hover:text-purple-300 transition flex items-center gap-1.5 group px-2.5 py-1 rounded-lg hover:bg-purple-950/40 border border-transparent hover:border-purple-500/30"
           >
-            {isDarkMode ? (
-              <>
-                <Sun className="w-3.5 h-3.5" />
-                <span>Switch Theme</span>
-              </>
-            ) : (
-              <>
-                <Moon className="w-3.5 h-3.5" />
-                <span>Switch Theme</span>
-              </>
-            )}
-          </button>
+            <Globe className="w-3.5 h-3.5 text-purple-400 group-hover:rotate-12 transition-transform" />
+            <span>Web Portfolio</span>
+            <ArrowUpRight className="w-3.5 h-3.5 text-purple-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+          </a>
+
         </div>
       </footer>
 
-      {/* Comparison Modal */}
+      {/* Modal de Comparaciones */}
       {activeComparison && (
         <ComparisonModal
           comparison={activeComparison}
-          technologies={technologies}
+          technologies={techList}
           onClose={() => setActiveComparison(null)}
         />
       )}
