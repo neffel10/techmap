@@ -1,0 +1,72 @@
+[
+  {
+    "id": "frontend-core",
+    "title": "Frontend Core & Meta-Frameworks",
+    "color": "bg-blue-500",
+    "icon": "code",
+    "image": "https://images.unsplash.com/photo-1643116774075-acc00caa9a7b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+  },
+  {
+    "id": "styling-design",
+    "title": "Styling & Design Systems",
+    "color": "bg-purple-500",
+    "icon": "file-text",
+    "image": "https://images.unsplash.com/photo-1665625771509-072025eb2d47?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+  },
+  {
+    "id": "state-fetching",
+    "title": "State & Data Fetching",
+    "color": "bg-indigo-500",
+    "icon": "layers",
+    "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+  },
+  {
+    "id": "backend-runtimes",
+    "title": "Backend & Runtimes",
+    "color": "bg-green-500",
+    "icon": "server",
+    "image": "https://images.unsplash.com/photo-1579274216947-86eaa4b00475?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+  },
+  {
+    "id": "databases-orms",
+    "title": "Databases & ORMs",
+    "color": "bg-amber-500",
+    "icon": "database",
+    "image": "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+  },
+  {
+    "id": "apis-communication",
+    "title": "APIs & Communication",
+    "color": "bg-teal-500",
+    "icon": "network",
+    "image": "https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+  },
+  {
+    "id": "devops-cloud",
+    "title": "DevOps, Cloud & Deploy",
+    "color": "bg-cyan-500",
+    "icon": "workflow",
+    "image": "https://images.unsplash.com/photo-1606185540834-d6e7483ee1a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+  },
+  {
+    "id": "testing-quality",
+    "title": "Testing & Code Quality",
+    "color": "bg-emerald-500",
+    "icon": "check-circle",
+    "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+  },
+  {
+    "id": "auth-security",
+    "title": "Authentication & Security",
+    "color": "bg-red-500",
+    "icon": "shield",
+    "image": "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+  },
+  {
+    "id": "ai-dev-tools",
+    "title": "AI & Developer Tools",
+    "color": "bg-rose-500",
+    "icon": "cpu",
+    "image": "https://images.unsplash.com/photo-1677442136019-21780efad99a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+  }
+]

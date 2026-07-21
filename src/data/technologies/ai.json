@@ -1,0 +1,72 @@
+[
+  {
+    "id": "openai-api",
+    "categoryId": "ai-dev-tools",
+    "title": "OpenAI API / SDK",
+    "status": "learning",
+    "simpleMetaphor": "Plug-and-play AI intelligence for text generation, vision, and function execution in your app.",
+    "technicalExplanation": "API endpoints exposing state-of-the-art LLMs (GPT-4o) for semantic reasoning and embeddings.",
+    "worksWellWith": ["Next.js", "Node.js", "TypeScript", "LangChain"],
+    "connections": ["next", "node", "typescript", "langchain"]
+  },
+  {
+    "id": "langchain",
+    "categoryId": "ai-dev-tools",
+    "title": "LangChain",
+    "status": "to-explore",
+    "simpleMetaphor": "Framework for chaining LLMs together with external tools, vector databases, and memory.",
+    "technicalExplanation": "Framework designed to simplify building applications powered by language models with agentic workflows.",
+    "worksWellWith": ["OpenAI API", "Python", "TypeScript", "Vector DBs (Pinecone)"],
+    "connections": ["openai-api", "python", "typescript", "vector-dbs"]
+  },
+  {
+    "id": "ollama",
+    "categoryId": "ai-dev-tools",
+    "title": "Ollama",
+    "status": "to-explore",
+    "simpleMetaphor": "Run powerful open-source AI models (Llama 3) locally on your own machine.",
+    "technicalExplanation": "Tool for bundling and running open-source large language models locally via a REST interface.",
+    "worksWellWith": ["Node.js", "Python"],
+    "connections": ["node", "python"]
+  },
+  {
+    "id": "git",
+    "categoryId": "ai-dev-tools",
+    "title": "Git",
+    "status": "i-know",
+    "simpleMetaphor": "Time machine for your code that tracks history, branches, and team contributions.",
+    "technicalExplanation": "Distributed version control system tracking source code modifications.",
+    "worksWellWith": ["GitHub Actions", "Vercel"],
+    "connections": ["github-actions", "vercel"]
+  },
+  {
+    "id": "vite",
+    "categoryId": "ai-dev-tools",
+    "title": "Vite",
+    "status": "i-know",
+    "simpleMetaphor": "Lightning-fast modern build tool and dev server replacement for Webpack.",
+    "technicalExplanation": "Frontend build tool leveraging native ES Modules and Esbuild for near-instant dev server startup.",
+    "worksWellWith": ["React.js", "Vue.js", "Tailwind CSS", "Vitest"],
+    "connections": ["react", "vue", "tailwind", "vitest"]
+  },
+  {
+    "id": "turborepo",
+    "categoryId": "ai-dev-tools",
+    "title": "Turborepo",
+    "status": "to-explore",
+    "simpleMetaphor": "Speeds up build times in projects containing multiple apps and shared packages.",
+    "technicalExplanation": "High-performance build system for JavaScript and TypeScript monorepos.",
+    "worksWellWith": ["Next.js", "React.js", "TypeScript"],
+    "connections": ["next", "react", "typescript"]
+  },
+  {
+    "id": "biome",
+    "categoryId": "ai-dev-tools",
+    "title": "Biome",
+    "status": "to-explore",
+    "simpleMetaphor": "Ultra-fast single tool replacing both ESLint and Prettier in Rust.",
+    "technicalExplanation": "High-performance toolchain written in Rust for formatting, linting, and organizing imports.",
+    "worksWellWith": ["TypeScript", "React.js"],
+    "connections": ["typescript", "react"]
+  }
+]

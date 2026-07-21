@@ -1,0 +1,177 @@
+[
+  {
+    "id": "frontend-frameworks-comparison",
+    "title": "React vs Vue vs Angular - Which one to choose?",
+    "technologies": ["react", "vue", "angular"],
+    "winner": "react",
+    "explanation": "React dominates the market (~40% market share), Vue offers the gentlest learning curve, and Angular is the most complete framework for large enterprise teams.",
+    "whenToUse": [
+      {
+        "techId": "react",
+        "scenario": "Projects of any scale, freelance work, and startups. A massive community ensures endless ecosystem packages and solutions."
+      },
+      {
+        "techId": "vue",
+        "scenario": "Small to medium projects, especially if transitioning from vanilla JS. Popular in Asian markets and ideal for fast onboarding."
+      },
+      {
+        "techId": "angular",
+        "scenario": "Large-scale enterprise software with multiple developers requiring strict structure and out-of-the-box architecture."
+      }
+    ],
+    "transitionDifficulty": [
+      { "from": "react", "to": "vue", "difficulty": "easy", "timeEstimate": "1-2 weeks" },
+      { "from": "vue", "to": "react", "difficulty": "easy", "timeEstimate": "2-3 weeks" },
+      { "from": "react", "to": "angular", "difficulty": "hard", "timeEstimate": "1-2 months" }
+    ]
+  },
+  {
+    "id": "cms-comparison",
+    "title": "WordPress vs Headless CMS - Traditional or Modern?",
+    "technologies": ["wordpress", "contentful", "strapi", "sanity"],
+    "winner": "wordpress",
+    "explanation": "WordPress powers over 43% of the web. Headless CMS solutions represent modern architecture but require higher technical setup.",
+    "whenToUse": [
+      {
+        "techId": "wordpress",
+        "scenario": "Blogs, corporate sites, and SMB e-commerce. Perfect for fast deployment without custom development."
+      },
+      {
+        "techId": "contentful",
+        "scenario": "Omnichannel content delivery (web, mobile apps, IoT). Enterprise teams with dedicated budget."
+      },
+      {
+        "techId": "strapi",
+        "scenario": "You want a free, self-hosted headless CMS with full control over your server and Node.js backend."
+      },
+      {
+        "techId": "sanity",
+        "scenario": "Real-time collaborative editing and highly flexible structured content requirements."
+      }
+    ],
+    "transitionDifficulty": [
+      { "from": "wordpress", "to": "strapi", "difficulty": "hard", "timeEstimate": "1-2 months" },
+      { "from": "contentful", "to": "strapi", "difficulty": "easy", "timeEstimate": "1 week" }
+    ]
+  },
+  {
+    "id": "crm-comparison",
+    "title": "Salesforce vs HubSpot vs Zoho - Which CRM?",
+    "technologies": ["salesforce", "hubspot", "zoho"],
+    "winner": "salesforce",
+    "explanation": "Salesforce is the global #1 enterprise leader, HubSpot excels in inbound marketing, and Zoho offers high cost-effective flexibility.",
+    "whenToUse": [
+      {
+        "techId": "salesforce",
+        "scenario": "Large corporations requiring custom automation workflows and massive scalability."
+      },
+      {
+        "techId": "hubspot",
+        "scenario": "Growing businesses focused on content marketing, lead generation, and email automation."
+      },
+      {
+        "techId": "zoho",
+        "scenario": "Small to medium businesses looking for a complete CRM on a budget."
+      }
+    ],
+    "transitionDifficulty": [
+      { "from": "hubspot", "to": "salesforce", "difficulty": "hard", "timeEstimate": "2-3 months" },
+      { "from": "zoho", "to": "salesforce", "difficulty": "medium", "timeEstimate": "1-2 months" }
+    ]
+  },
+  {
+    "id": "styling-comparison",
+    "title": "Tailwind vs SASS/LESS - Utility-first or Preprocessor?",
+    "technologies": ["tailwind", "sass"],
+    "winner": "tailwind",
+    "explanation": "Tailwind is rapidly growing as the modern standard, while SASS remains the classic preprocessor favorite. Both are production-grade.",
+    "whenToUse": [
+      {
+        "techId": "tailwind",
+        "scenario": "Modern component-based stacks (React/Vue/Next). Allows rapid prototyping without managing external CSS files."
+      },
+      {
+        "techId": "sass",
+        "scenario": "Large legacy codebases or complex custom design systems utilizing traditional stylesheets."
+      }
+    ],
+    "transitionDifficulty": [
+      { "from": "sass", "to": "tailwind", "difficulty": "medium", "timeEstimate": "1-2 weeks" }
+    ]
+  },
+  {
+    "id": "analytics-comparison",
+    "title": "Google Analytics vs Tag Management",
+    "technologies": ["ga", "gtm"],
+    "winner": "ga",
+    "explanation": "Google Analytics is the de facto web standard (~85% market share). GTM simplifies tag deployments alongside GA.",
+    "whenToUse": [
+      {
+        "techId": "ga",
+        "scenario": "Any website needing traffic insight, user acquisition metrics, and event tracking."
+      },
+      {
+        "techId": "gtm",
+        "scenario": "Managing multiple marketing tags and pixels without constantly modifying source code."
+      }
+    ],
+    "transitionDifficulty": []
+  },
+  {
+    "id": "devops-comparison",
+    "title": "Docker vs Traditional Deployment",
+    "technologies": ["docker"],
+    "winner": "docker",
+    "explanation": "Docker containerization is the modern industry standard for reliable multi-environment deployments.",
+    "whenToUse": [
+      {
+        "techId": "docker",
+        "scenario": "Professional software team environments to ensure code runs identically across local development and production."
+      }
+    ],
+    "transitionDifficulty": []
+  },
+  {
+    "id": "api-comparison",
+    "title": "API vs RESTful API vs JSON/REST API - What's the difference?",
+    "technologies": ["rest-api", "restful"],
+    "winner": "rest-api",
+    "explanation": "API is the general concept, RESTful is the architectural style, and JSON/REST API is the practical implementation format.",
+    "whenToUse": [
+      {
+        "techId": "rest-api",
+        "scenario": "Combines REST architecture with JSON data payload. Used by over 90% of modern web applications."
+      },
+      {
+        "techId": "restful",
+        "scenario": "Represents strict adherence to REST architectural constraints (HTTP verbs, statelessness, clean URLs)."
+      }
+    ],
+    "transitionDifficulty": []
+  },
+  {
+    "id": "server-client-components",
+    "title": "Server Components vs Client Components - Where to render?",
+    "technologies": ["next", "react"],
+    "winner": "next",
+    "explanation": "Server Components (RSC) run exclusively on the server sending pre-rendered HTML. Client Components run in the browser to enable user interactivity.",
+    "whenToUse": [
+      {
+        "techId": "next",
+        "scenario": "🖥️ SERVER COMPONENTS (default in Next.js App Router): Use for static content, database fetches, and non-interactive UI. ⚡ Faster initial page load and better security."
+      },
+      {
+        "techId": "react",
+        "scenario": "💻 CLIENT COMPONENTS (opt-in via 'use client'): Use for interactive elements (button clicks, form state, useEffect, event listeners)."
+      }
+    ],
+    "transitionDifficulty": [
+      {
+        "from": "react",
+        "to": "next",
+        "difficulty": "medium",
+        "timeEstimate": "2-3 weeks to internalize the mental model shift"
+      }
+    ]
+  }
+]

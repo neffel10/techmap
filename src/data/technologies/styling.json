@@ -1,0 +1,82 @@
+[
+  {
+    "id": "tailwind",
+    "categoryId": "styling-design",
+    "title": "Tailwind CSS v4",
+    "status": "i-know",
+    "simpleMetaphor": "Style UI directly in HTML using pre-built utility classes without separate stylesheet files.",
+    "technicalExplanation": "Utility-first CSS framework with an updated Rust-powered Oxide engine in v4 for instant builds.",
+    "worksWellWith": ["React.js", "Next.js", "Shadcn UI"],
+    "connections": ["react", "next", "shadcn"]
+  },
+  {
+    "id": "sass",
+    "categoryId": "styling-design",
+    "title": "SASS/SCSS",
+    "status": "i-know",
+    "simpleMetaphor": "Traditional CSS with extra powers like variables, nesting, and reusable mixins.",
+    "technicalExplanation": "CSS preprocessor extending standard syntax with SCSS features before compiling to standard CSS.",
+    "worksWellWith": ["Tailwind CSS"],
+    "connections": ["tailwind"]
+  },
+  {
+    "id": "css-modules",
+    "categoryId": "styling-design",
+    "title": "CSS Modules",
+    "status": "i-know",
+    "simpleMetaphor": "Scopes CSS class names automatically so styles in one component never break another.",
+    "technicalExplanation": "CSS file compilation process that scopes class names and animation names locally by default.",
+    "worksWellWith": ["React.js", "Next.js"],
+    "connections": ["react", "next"]
+  },
+  {
+    "id": "styled-components",
+    "categoryId": "styling-design",
+    "title": "Styled Components",
+    "status": "i-know",
+    "simpleMetaphor": "Write actual CSS directly inside your React JavaScript component files.",
+    "technicalExplanation": "CSS-in-JS library using tagged template literals to style React components dynamically with props.",
+    "worksWellWith": ["React.js", "TypeScript"],
+    "connections": ["react", "typescript"]
+  },
+  {
+    "id": "shadcn",
+    "categoryId": "styling-design",
+    "title": "Shadcn UI",
+    "status": "learning",
+    "simpleMetaphor": "Tailwind component code that you copy directly into your project for 100% style control.",
+    "technicalExplanation": "Re-usable component library built on Radix Primitives and Tailwind CSS for accessible design.",
+    "worksWellWith": ["React.js", "Next.js", "Tailwind CSS"],
+    "connections": ["react", "next", "tailwind"]
+  },
+  {
+    "id": "radix-primitives",
+    "categoryId": "styling-design",
+    "title": "Radix Primitives",
+    "status": "to-explore",
+    "simpleMetaphor": "Unstyled, accessible building blocks (modals, dropdowns) that you can style however you want.",
+    "technicalExplanation": "Unstyled, accessible UI component primitives for React focusing on WAI-ARIA compliance.",
+    "worksWellWith": ["Shadcn UI", "Tailwind CSS", "React.js"],
+    "connections": ["shadcn", "tailwind", "react"]
+  },
+  {
+    "id": "daisyui",
+    "categoryId": "styling-design",
+    "title": "DaisyUI",
+    "status": "to-explore",
+    "simpleMetaphor": "Adds component class names (btn, card) on top of Tailwind CSS to write cleaner HTML.",
+    "technicalExplanation": "Tailwind CSS plugin providing semantic component classes without inline utility clutter.",
+    "worksWellWith": ["Tailwind CSS", "React.js"],
+    "connections": ["tailwind", "react"]
+  },
+  {
+    "id": "storybook",
+    "categoryId": "styling-design",
+    "title": "Storybook",
+    "status": "learning",
+    "simpleMetaphor": "An isolated workshop to build and test UI components in isolation before adding them to your main app.",
+    "technicalExplanation": "Development environment for UI components enabling isolated rendering, documentation, and testing.",
+    "worksWellWith": ["React.js", "Tailwind CSS", "TypeScript"],
+    "connections": ["react", "tailwind", "typescript"]
+  }
+]

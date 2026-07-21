@@ -1,0 +1,52 @@
+[
+  {
+    "id": "redux-toolkit",
+    "categoryId": "state-fetching",
+    "title": "Redux Toolkit",
+    "status": "i-know",
+    "simpleMetaphor": "A centralized vault to manage global app state in large, complex applications.",
+    "technicalExplanation": "Standardized toolset for efficient Redux development, simplifying store setup and immutability.",
+    "worksWellWith": ["React.js", "TypeScript"],
+    "connections": ["react", "typescript"]
+  },
+  {
+    "id": "zustand",
+    "categoryId": "state-fetching",
+    "title": "Zustand",
+    "status": "learning",
+    "simpleMetaphor": "A lightweight central state notebook for React without boilerplate setup.",
+    "technicalExplanation": "Small, fast state-management solution based on hook stores with simplified subscription logic.",
+    "worksWellWith": ["React.js", "Next.js", "TypeScript"],
+    "connections": ["react", "next", "typescript"]
+  },
+  {
+    "id": "tanstack-query",
+    "categoryId": "state-fetching",
+    "title": "TanStack Query (React Query)",
+    "status": "learning",
+    "simpleMetaphor": "Handles API fetching, automatic background caching, loading states, and updates for you.",
+    "technicalExplanation": "Powerful asynchronous state manager for fetching, caching, and updating server state in web applications.",
+    "worksWellWith": ["React.js", "Next.js", "TypeScript", "REST API"],
+    "connections": ["react", "next", "typescript", "rest-api"]
+  },
+  {
+    "id": "jotai",
+    "categoryId": "state-fetching",
+    "title": "Jotai",
+    "status": "to-explore",
+    "simpleMetaphor": "Manage global state using atomic state pieces that trigger re-renders only where needed.",
+    "technicalExplanation": "Primitive and flexible state management for React based on bottom-up atomic state architecture.",
+    "worksWellWith": ["React.js", "TypeScript"],
+    "connections": ["react", "typescript"]
+  },
+  {
+    "id": "context-api",
+    "categoryId": "state-fetching",
+    "title": "React Context API",
+    "status": "i-know",
+    "simpleMetaphor": "React's native way to share data across components without manually passing props down.",
+    "technicalExplanation": "Built-in React feature for passing data through the component tree without prop drilling.",
+    "worksWellWith": ["React.js", "TypeScript"],
+    "connections": ["react", "typescript"]
+  }
+]

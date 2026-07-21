@@ -1,0 +1,112 @@
+[
+  {
+    "id": "react",
+    "categoryId": "frontend-core",
+    "title": "React.js",
+    "status": "i-know",
+    "simpleMetaphor": "Interactive LEGO blocks for building web pages with reusable components.",
+    "technicalExplanation": "A component-based UI library utilizing a Virtual DOM for efficient client-side rendering.",
+    "worksWellWith": ["Next.js", "TypeScript", "Tailwind CSS", "Zustand"],
+    "connections": ["next", "typescript", "tailwind", "zustand"]
+  },
+  {
+    "id": "next",
+    "categoryId": "frontend-core",
+    "title": "Next.js",
+    "status": "learning",
+    "simpleMetaphor": "React with built-in routing, server rendering, and automatic SEO optimizations.",
+    "technicalExplanation": "Fullstack React framework featuring Server Components, SSR, SSG, and API Routes.",
+    "worksWellWith": ["React.js", "Node.js", "TypeScript", "Tailwind CSS"],
+    "connections": ["react", "node", "typescript", "tailwind"]
+  },
+  {
+    "id": "vue",
+    "categoryId": "frontend-core",
+    "title": "Vue.js",
+    "status": "to-explore",
+    "simpleMetaphor": "A progressive, approachable framework for quickly building dynamic user interfaces.",
+    "technicalExplanation": "Progressive UI framework using proxy-based reactivity and Single File Components.",
+    "worksWellWith": ["Nuxt.js", "TypeScript", "Tailwind CSS"],
+    "connections": ["nuxt", "typescript", "tailwind"]
+  },
+  {
+    "id": "nuxt",
+    "categoryId": "frontend-core",
+    "title": "Nuxt.js",
+    "status": "to-explore",
+    "simpleMetaphor": "The Next.js equivalent for Vue developers, adding SSR and server routes automatically.",
+    "technicalExplanation": "An intuitive Vue framework for building server-rendered and static web applications.",
+    "worksWellWith": ["Vue.js", "TypeScript", "Tailwind CSS"],
+    "connections": ["vue", "typescript", "tailwind"]
+  },
+  {
+    "id": "svelte",
+    "categoryId": "frontend-core",
+    "title": "Svelte",
+    "status": "to-explore",
+    "simpleMetaphor": "Compiles your code directly into tiny JavaScript at build time without a Virtual DOM.",
+    "technicalExplanation": "A component framework that converts app declarations into surgical vanilla JavaScript during build.",
+    "worksWellWith": ["SvelteKit", "TypeScript", "Tailwind CSS"],
+    "connections": ["sveltekit", "typescript", "tailwind"]
+  },
+  {
+    "id": "sveltekit",
+    "categoryId": "frontend-core",
+    "title": "SvelteKit",
+    "status": "to-explore",
+    "simpleMetaphor": "The official fullstack application framework built on top of Svelte.",
+    "technicalExplanation": "Application framework for Svelte offering file-system routing, SSR, and API endpoints.",
+    "worksWellWith": ["Svelte", "TypeScript", "Vite"],
+    "connections": ["svelte", "typescript", "vite"]
+  },
+  {
+    "id": "astro",
+    "categoryId": "frontend-core",
+    "title": "Astro",
+    "status": "to-explore",
+    "simpleMetaphor": "Generates ultra-fast static HTML and ships zero JavaScript by default unless specified.",
+    "technicalExplanation": "Islands Architecture framework designed for content-driven sites with multi-UI framework support.",
+    "worksWellWith": ["React.js", "Tailwind CSS", "TypeScript"],
+    "connections": ["react", "tailwind", "typescript"]
+  },
+  {
+    "id": "remix",
+    "categoryId": "frontend-core",
+    "title": "Remix",
+    "status": "to-explore",
+    "simpleMetaphor": "A fullstack React framework focused on native web standards, form submissions, and resilient routing.",
+    "technicalExplanation": "React framework emphasizing web primitives, nested routing, dynamic data loading, and mutations.",
+    "worksWellWith": ["React.js", "TypeScript", "Tailwind CSS"],
+    "connections": ["react", "typescript", "tailwind"]
+  },
+  {
+    "id": "angular",
+    "categoryId": "frontend-core",
+    "title": "Angular",
+    "status": "to-explore",
+    "simpleMetaphor": "A complete enterprise toolkit by Google with strict structural conventions.",
+    "technicalExplanation": "Opinionated TypeScript framework featuring dependency injection, RxJS, and native CLI tools.",
+    "worksWellWith": ["TypeScript", "RxJS"],
+    "connections": ["typescript"]
+  },
+  {
+    "id": "htmx",
+    "categoryId": "frontend-core",
+    "title": "HTMX",
+    "status": "to-explore",
+    "simpleMetaphor": "Extends HTML to make AJAX requests and swap page sections directly without writing heavy JS.",
+    "technicalExplanation": "Library allowing access to AJAX, CSS Transitions, WebSockets, and SSE directly in HTML attributes.",
+    "worksWellWith": ["Express.js", "Go", "Python"],
+    "connections": ["express", "go", "python"]
+  },
+  {
+    "id": "web-components",
+    "categoryId": "frontend-core",
+    "title": "Web Components",
+    "status": "to-explore",
+    "simpleMetaphor": "Custom HTML tags supported natively by browsers without requiring any framework.",
+    "technicalExplanation": "Suite of W3C web standards (Custom Elements, Shadow DOM, HTML Templates) for encapsulated UI widgets.",
+    "worksWellWith": ["TypeScript"],
+    "connections": ["typescript"]
+  }
+]

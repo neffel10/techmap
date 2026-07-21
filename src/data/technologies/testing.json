@@ -1,0 +1,62 @@
+[
+  {
+    "id": "vitest",
+    "categoryId": "testing-quality",
+    "title": "Vitest",
+    "status": "learning",
+    "simpleMetaphor": "Blazing fast Vite-native unit test runner to verify functions and components.",
+    "technicalExplanation": "Next-generation unit testing framework powered by Vite with instant HMR and Jest compatibility.",
+    "worksWellWith": ["React.js", "TypeScript", "Vite"],
+    "connections": ["react", "typescript", "vite"]
+  },
+  {
+    "id": "jest",
+    "categoryId": "testing-quality",
+    "title": "Jest",
+    "status": "i-know",
+    "simpleMetaphor": "Classic testing framework for verifying JavaScript functions and component snapshots.",
+    "technicalExplanation": "Delightful JavaScript testing framework with a focus on simplicity and snapshot testing.",
+    "worksWellWith": ["React.js", "Node.js"],
+    "connections": ["react", "node"]
+  },
+  {
+    "id": "playwright",
+    "categoryId": "testing-quality",
+    "title": "Playwright",
+    "status": "to-explore",
+    "simpleMetaphor": "Automates real browsers to test full user journeys end-to-end.",
+    "technicalExplanation": "End-to-end testing library for modern web applications across Chromium, Firefox, and WebKit.",
+    "worksWellWith": ["React.js", "Next.js", "TypeScript"],
+    "connections": ["react", "next", "typescript"]
+  },
+  {
+    "id": "cypress",
+    "categoryId": "testing-quality",
+    "title": "Cypress",
+    "status": "learning",
+    "simpleMetaphor": "Developer-friendly end-to-end testing with visual time-travel debugging.",
+    "technicalExplanation": "Front-end testing tool built for the modern web with real-time DOM execution.",
+    "worksWellWith": ["React.js", "Next.js"],
+    "connections": ["react", "next"]
+  },
+  {
+    "id": "eslint",
+    "categoryId": "testing-quality",
+    "title": "ESLint",
+    "status": "i-know",
+    "simpleMetaphor": "Analyzes your code to highlight bugs, syntax errors, and bad practices as you type.",
+    "technicalExplanation": "Pluggable static code analysis tool for identifying problematic patterns in JavaScript/TypeScript.",
+    "worksWellWith": ["TypeScript", "Prettier", "React.js"],
+    "connections": ["typescript", "prettier", "react"]
+  },
+  {
+    "id": "prettier",
+    "categoryId": "testing-quality",
+    "title": "Prettier",
+    "status": "i-know",
+    "simpleMetaphor": "Automatically formats your code layout and indentation on every save.",
+    "technicalExplanation": "Opinionated code formatter supporting JavaScript, TypeScript, CSS, HTML, and JSON.",
+    "worksWellWith": ["ESLint", "TypeScript"],
+    "connections": ["eslint", "typescript"]
+  }
+]

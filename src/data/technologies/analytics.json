@@ -1,0 +1,22 @@
+[
+  {
+    "id": "ga",
+    "categoryId": "analytics-marketing",
+    "title": "Google Analytics",
+    "status": "i-know",
+    "simpleMetaphor": "El radar de tu sitio web: muestra cuántas personas te visitan, de dónde vienen y qué hacen.",
+    "technicalExplanation": "Herramienta de analítica web (GA4) basada en eventos e inteligencia de usuario.",
+    "worksWellWith": ["Google Tag Manager", "HubSpot"],
+    "connections": ["gtm", "hubspot"]
+  },
+  {
+    "id": "gtm",
+    "categoryId": "analytics-marketing",
+    "title": "Google Tag Manager",
+    "status": "i-know",
+    "simpleMetaphor": "Un panel de control para instalar píxeles de rastreo en tu web sin tocar el código fuente.",
+    "technicalExplanation": "Sistema de gestión de etiquetas (Tag Management System) para inyección dinámica de scripts.",
+    "worksWellWith": ["Google Analytics"],
+    "connections": ["ga"]
+  }
+]

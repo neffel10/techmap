@@ -1,0 +1,42 @@
+[
+  {
+    "id": "wordpress",
+    "categoryId": "cms",
+    "title": "WordPress",
+    "status": "i-know",
+    "simpleMetaphor": "El administrador de contenidos más popular del mundo para crear páginas web sin programar desde cero.",
+    "technicalExplanation": "CMS monolítico basado en PHP y MySQL que domina la web con su ecosistema de plugins y temas.",
+    "worksWellWith": ["REST API", "MySQL"],
+    "connections": ["rest-api"]
+  },
+  {
+    "id": "contentful",
+    "categoryId": "cms",
+    "title": "Contentful",
+    "status": "to-explore",
+    "simpleMetaphor": "Un CMS donde guardas el contenido y lo consumes en cualquier app vía API.",
+    "technicalExplanation": "Headless CMS basado en la nube con entrega de contenido headless mediante API GraphQL/REST.",
+    "worksWellWith": ["Next.js", "React.js"],
+    "connections": ["next", "react"]
+  },
+  {
+    "id": "strapi",
+    "categoryId": "cms",
+    "title": "Strapi",
+    "status": "learning",
+    "simpleMetaphor": "Un CMS headless en Node.js que puedes hospedar en tu propio servidor gratis.",
+    "technicalExplanation": "Headless CMS de código abierto construido en Node.js con panel personalizable y API REST/GraphQL automática.",
+    "worksWellWith": ["React.js", "Next.js", "Node.js"],
+    "connections": ["react", "next", "node"]
+  },
+  {
+    "id": "sanity",
+    "categoryId": "cms",
+    "title": "Sanity.io",
+    "status": "to-explore",
+    "simpleMetaphor": "Un CMS en tiempo real extremadamente flexible para estructurar datos complejos.",
+    "technicalExplanation": "Plataforma de contenido estructurado con editor customizable React (Sanity Studio) y consultas GROQ.",
+    "worksWellWith": ["Next.js", "React.js"],
+    "connections": ["next", "react"]
+  }
+]

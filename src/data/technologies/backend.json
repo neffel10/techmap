@@ -1,0 +1,82 @@
+[
+  {
+    "id": "node",
+    "categoryId": "backend-runtimes",
+    "title": "Node.js",
+    "status": "i-know",
+    "simpleMetaphor": "Runs JavaScript on the server outside of the web browser.",
+    "technicalExplanation": "Event-driven asynchronous JavaScript runtime built on Chrome's V8 engine.",
+    "worksWellWith": ["Express.js", "Next.js", "REST API", "PostgreSQL"],
+    "connections": ["express", "next", "rest-api", "postgres"]
+  },
+  {
+    "id": "express",
+    "categoryId": "backend-runtimes",
+    "title": "Express.js",
+    "status": "i-know",
+    "simpleMetaphor": "Minimalist framework on Node.js to quickly create web servers and REST endpoints.",
+    "technicalExplanation": "Minimalist and flexible Node.js web application framework providing routing and middleware utilities.",
+    "worksWellWith": ["Node.js", "REST API", "Prisma"],
+    "connections": ["node", "rest-api", "prisma"]
+  },
+  {
+    "id": "bun",
+    "categoryId": "backend-runtimes",
+    "title": "Bun",
+    "status": "to-explore",
+    "simpleMetaphor": "Ultra-fast modern replacement for Node.js that includes an integrated package manager.",
+    "technicalExplanation": "All-in-one JavaScript runtime, bundler, test runner, and package manager written in Zig.",
+    "worksWellWith": ["TypeScript", "REST API"],
+    "connections": ["typescript", "rest-api"]
+  },
+  {
+    "id": "deno",
+    "categoryId": "backend-runtimes",
+    "title": "Deno",
+    "status": "to-explore",
+    "simpleMetaphor": "A secure JavaScript and TypeScript runtime created by Node's original creator.",
+    "technicalExplanation": "Modern runtime for JavaScript and TypeScript with secure defaults and web-standard APIs.",
+    "worksWellWith": ["TypeScript", "REST API"],
+    "connections": ["typescript", "rest-api"]
+  },
+  {
+    "id": "nestjs",
+    "categoryId": "backend-runtimes",
+    "title": "NestJS",
+    "status": "learning",
+    "simpleMetaphor": "An enterprise Node.js framework structured with Angular-like modules and dependency injection.",
+    "technicalExplanation": "Progressive Node.js framework built with TypeScript for scalable backend server architecture.",
+    "worksWellWith": ["TypeScript", "PostgreSQL", "Prisma"],
+    "connections": ["typescript", "postgres", "prisma"]
+  },
+  {
+    "id": "fastify",
+    "categoryId": "backend-runtimes",
+    "title": "Fastify",
+    "status": "to-explore",
+    "simpleMetaphor": "A Node.js web framework focused on extreme speed and low overhead.",
+    "technicalExplanation": "Fast and low-overhead Node.js web framework inspired by Hapi and Express with schema parsing.",
+    "worksWellWith": ["Node.js", "TypeScript"],
+    "connections": ["node", "typescript"]
+  },
+  {
+    "id": "python",
+    "categoryId": "backend-runtimes",
+    "title": "Python (FastAPI / Django)",
+    "status": "learning",
+    "simpleMetaphor": "High-level language famous for AI, data analysis, and clean web backends.",
+    "technicalExplanation": "Versatile programming language powering web frameworks like FastAPI (async APIs) and Django (batteries-included).",
+    "worksWellWith": ["OpenAI API", "PostgreSQL", "Docker"],
+    "connections": ["openai-api", "postgres", "docker"]
+  },
+  {
+    "id": "go",
+    "categoryId": "backend-runtimes",
+    "title": "Go (Golang)",
+    "status": "to-explore",
+    "simpleMetaphor": "Google's compiled language built for massive concurrency, microservices, and speed.",
+    "technicalExplanation": "Statically typed, compiled language with built-in concurrency (goroutines) for high-performance servers.",
+    "worksWellWith": ["Docker", "Kubernetes", "gRPC"],
+    "connections": ["docker", "kubernetes", "grpc"]
+  }
+]

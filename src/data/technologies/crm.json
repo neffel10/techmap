@@ -1,0 +1,32 @@
+[
+  {
+    "id": "salesforce",
+    "categoryId": "crm",
+    "title": "Salesforce",
+    "status": "to-explore",
+    "simpleMetaphor": "La plataforma #1 del mundo para gestionar ventas, prospectos y clientes en grandes empresas.",
+    "technicalExplanation": "CRM empresarial en la nube para automatización de procesos de venta y workflows complejos.",
+    "worksWellWith": ["REST API"],
+    "connections": ["rest-api"]
+  },
+  {
+    "id": "hubspot",
+    "categoryId": "crm",
+    "title": "HubSpot",
+    "status": "learning",
+    "simpleMetaphor": "Plataforma todo en uno para atracción de clientes, marketing por correo y seguimiento de ventas.",
+    "technicalExplanation": "CRM y suite de automatización de marketing enfocado en la metodología de Inbound Marketing.",
+    "worksWellWith": ["Google Analytics"],
+    "connections": ["ga"]
+  },
+  {
+    "id": "zoho",
+    "categoryId": "crm",
+    "title": "Zoho CRM",
+    "status": "to-explore",
+    "simpleMetaphor": "Un CRM accesible y muy completo para pequeñas y medianas empresas.",
+    "technicalExplanation": "Solución CRM económica con pipeline visual de ventas y automatizaciones multicanal.",
+    "worksWellWith": ["REST API"],
+    "connections": ["rest-api"]
+  }
+]

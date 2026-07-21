@@ -13,24 +13,24 @@ export function ComparisonModal({ comparison, technologies, onClose }) {
   if (!comparison) return null;
 
   const techMetricsDatabase = {
-    react: { emoji: "⚛️", marketShare: "40% del mercado", learningCurve: "medium", popularity: 10, projectSize: ["small", "medium", "large"] },
-    next: { emoji: "▲", marketShare: "Estándar React Fullstack", learningCurve: "medium", popularity: 9, projectSize: ["medium", "large"] },
-    vue: { emoji: "💚", marketShare: "10% del mercado", learningCurve: "easy", popularity: 7, projectSize: ["small", "medium"] },
-    angular: { emoji: "🅰️", marketShare: "20% del mercado", learningCurve: "hard", popularity: 6, projectSize: ["large"] },
-    tailwind: { emoji: "🎨", marketShare: "Framework CSS #1", learningCurve: "easy", popularity: 9, projectSize: ["small", "medium", "large"] },
-    sass: { emoji: "💅", marketShare: "Estándar tradicional", learningCurve: "easy", popularity: 7, projectSize: ["medium", "large"] },
-    wordpress: { emoji: "📝", marketShare: "43% de la web", learningCurve: "easy", popularity: 10, projectSize: ["small", "medium"] },
-    contentful: { emoji: "☁️", marketShare: "Líder enterprise", learningCurve: "medium", popularity: 7, projectSize: ["medium", "large"] },
-    strapi: { emoji: "🚀", marketShare: "Open-source #1", learningCurve: "medium", popularity: 8, projectSize: ["small", "medium", "large"] },
-    sanity: { emoji: "✨", marketShare: "Figma, Cloudflare", learningCurve: "medium", popularity: 7, projectSize: ["medium", "large"] },
-    salesforce: { emoji: "☁️", marketShare: "#1 CRM Mundial", learningCurve: "hard", popularity: 10, projectSize: ["large"] },
-    hubspot: { emoji: "🧲", marketShare: "Líder Inbound", learningCurve: "easy", popularity: 9, projectSize: ["small", "medium", "large"] },
-    zoho: { emoji: "⚙️", marketShare: "Mejor calidad-precio", learningCurve: "medium", popularity: 7, projectSize: ["small", "medium"] },
-    ga: { emoji: "📊", marketShare: "85% cuota de mercado", learningCurve: "medium", popularity: 10, projectSize: ["small", "medium", "large"] },
-    gtm: { emoji: "🏷️", marketShare: "60% sitios con tags", learningCurve: "medium", popularity: 8, projectSize: ["medium", "large"] },
-    docker: { emoji: "🐳", marketShare: "82% empresas tech", learningCurve: "medium", popularity: 10, projectSize: ["medium", "large"] },
-    "rest-api": { emoji: "🔌", marketShare: "Estándar de facto", learningCurve: "medium", popularity: 10, projectSize: ["small", "medium", "large"] },
-    restful: { emoji: "🌐", marketShare: "Arquitectura REST", learningCurve: "medium", popularity: 10, projectSize: ["small", "medium", "large"] }
+    react: { emoji: "⚛️", marketShare: "40% market share", learningCurve: "medium", popularity: 10, projectSize: ["small", "medium", "large"] },
+    next: { emoji: "▲", marketShare: "Standard React Fullstack", learningCurve: "medium", popularity: 9, projectSize: ["medium", "large"] },
+    vue: { emoji: "💚", marketShare: "10% market share", learningCurve: "easy", popularity: 7, projectSize: ["small", "medium"] },
+    angular: { emoji: "🅰️", marketShare: "20% market share", learningCurve: "hard", popularity: 6, projectSize: ["large"] },
+    tailwind: { emoji: "🎨", marketShare: "#1 CSS Framework", learningCurve: "easy", popularity: 9, projectSize: ["small", "medium", "large"] },
+    sass: { emoji: "💅", marketShare: "Traditional standard", learningCurve: "easy", popularity: 7, projectSize: ["medium", "large"] },
+    wordpress: { emoji: "📝", marketShare: "43% of all websites", learningCurve: "easy", popularity: 10, projectSize: ["small", "medium"] },
+    contentful: { emoji: "☁️", marketShare: "Enterprise Headless Leader", learningCurve: "medium", popularity: 7, projectSize: ["medium", "large"] },
+    strapi: { emoji: "🚀", marketShare: "#1 Open-Source Headless", learningCurve: "medium", popularity: 8, projectSize: ["small", "medium", "large"] },
+    sanity: { emoji: "✨", marketShare: "Used by Figma & Cloudflare", learningCurve: "medium", popularity: 7, projectSize: ["medium", "large"] },
+    salesforce: { emoji: "☁️", marketShare: "#1 Global CRM", learningCurve: "hard", popularity: 10, projectSize: ["large"] },
+    hubspot: { emoji: "🧲", marketShare: "Inbound Marketing Leader", learningCurve: "easy", popularity: 9, projectSize: ["small", "medium", "large"] },
+    zoho: { emoji: "⚙️", marketShare: "Best value CRM", learningCurve: "medium", popularity: 7, projectSize: ["small", "medium"] },
+    ga: { emoji: "📊", marketShare: "85% web analytics share", learningCurve: "medium", popularity: 10, projectSize: ["small", "medium", "large"] },
+    gtm: { emoji: "🏷️", marketShare: "60% tag-managed sites", learningCurve: "medium", popularity: 8, projectSize: ["medium", "large"] },
+    docker: { emoji: "🐳", marketShare: "82% tech adoption", learningCurve: "medium", popularity: 10, projectSize: ["medium", "large"] },
+    "rest-api": { emoji: "🔌", marketShare: "De facto API standard", learningCurve: "medium", popularity: 10, projectSize: ["small", "medium", "large"] },
+    restful: { emoji: "🌐", marketShare: "REST Architecture", learningCurve: "medium", popularity: 10, projectSize: ["small", "medium", "large"] }
   };
 
   const getTechData = (id) => {
@@ -41,7 +41,7 @@ export function ComparisonModal({ comparison, technologies, onClose }) {
       id,
       title: globalTech.title || globalTech.name || id,
       emoji: globalTech.emoji || dbMetrics.emoji || "⚡",
-      marketShare: globalTech.marketShare || dbMetrics.marketShare || "Ampliamente utilizado",
+      marketShare: globalTech.marketShare || dbMetrics.marketShare || "Widely adopted",
       learningCurve: globalTech.learningCurve || dbMetrics.learningCurve || "medium",
       popularity: globalTech.popularity || dbMetrics.popularity || 8,
       projectSize: globalTech.projectSize || dbMetrics.projectSize || ["medium", "large"]
@@ -59,21 +59,21 @@ export function ComparisonModal({ comparison, technologies, onClose }) {
 
   const getProjectSizeLabel = (size) => {
     switch (size) {
-      case 'small': return 'Proyectos Pequeños';
-      case 'medium': return 'Proyectos Medianos';
-      case 'large': return 'Proyectos Grandes';
-      default: return 'Todos los tamaños';
+      case 'small': return 'Small Projects';
+      case 'medium': return 'Medium Projects';
+      case 'large': return 'Large Enterprise';
+      default: return 'All Scale';
     }
   };
 
   const getDifficultyBadge = (difficulty) => {
     switch (difficulty) {
       case 'easy':
-        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-300">Fácil</span>;
+        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-300">Easy</span>;
       case 'medium':
-        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">Medio</span>;
+        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">Medium</span>;
       case 'hard':
-        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-700 border border-rose-300">Difícil</span>;
+        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-700 border border-rose-300">Hard</span>;
       default:
         return null;
     }
@@ -123,7 +123,7 @@ export function ComparisonModal({ comparison, technologies, onClose }) {
                     </div>
                     {isWinner && (
                       <span className="px-3 py-1 text-[11px] font-bold bg-amber-400 text-amber-950 rounded-full shadow-sm">
-                        Más Popular
+                        Most Popular
                       </span>
                     )}
                   </div>
@@ -138,7 +138,7 @@ export function ComparisonModal({ comparison, technologies, onClose }) {
                   {tech.learningCurve && (
                     <div className="flex items-center gap-2 mb-3 text-xs text-slate-700 font-medium">
                       <Zap className="w-3.5 h-3.5 text-purple-600 shrink-0" />
-                      <span>Curva de aprendizaje:</span>
+                      <span>Learning curve:</span>
                       {getDifficultyBadge(tech.learningCurve)}
                     </div>
                   )}
@@ -175,7 +175,7 @@ export function ComparisonModal({ comparison, technologies, onClose }) {
 
         {/* 2. When to Use Section */}
         <div className="mb-8">
-          <h3 className="text-base font-bold text-slate-900 mb-3">¿Cuándo usar cada una?</h3>
+          <h3 className="text-base font-bold text-slate-900 mb-3">When to use each?</h3>
           <div className="space-y-3">
             {comparison.whenToUse.map((item) => {
               const tech = getTechData(item.techId);
@@ -203,7 +203,7 @@ export function ComparisonModal({ comparison, technologies, onClose }) {
         {/* 3. Transition Difficulty Section */}
         {comparison.transitionDifficulty && comparison.transitionDifficulty.length > 0 && (
           <div>
-            <h3 className="text-base font-bold text-slate-900 mb-3">Facilidad de transición entre tecnologías</h3>
+            <h3 className="text-base font-bold text-slate-900 mb-3">Transition difficulty between technologies</h3>
             <div className="space-y-2.5">
               {comparison.transitionDifficulty.map((transition, index) => {
                 const fromTech = getTechData(transition.from);

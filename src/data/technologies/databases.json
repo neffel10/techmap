@@ -1,0 +1,92 @@
+[
+  {
+    "id": "postgres",
+    "categoryId": "databases-orms",
+    "title": "PostgreSQL",
+    "status": "learning",
+    "simpleMetaphor": "Ultra-reliable open-source relational database storing data in structured tables.",
+    "technicalExplanation": "Powerful object-relational database system (RDBMS) with strong ACID compliance and JSON support.",
+    "worksWellWith": ["Node.js", "Prisma", "Supabase"],
+    "connections": ["node", "prisma", "supabase"]
+  },
+  {
+    "id": "mysql",
+    "categoryId": "databases-orms",
+    "title": "MySQL",
+    "status": "i-know",
+    "simpleMetaphor": "Classic relational database powering millions of web applications worldwide.",
+    "technicalExplanation": "Widely deployed relational database management system used across web ecosystems like WordPress.",
+    "worksWellWith": ["WordPress", "Node.js"],
+    "connections": ["wordpress", "node"]
+  },
+  {
+    "id": "mongodb",
+    "categoryId": "databases-orms",
+    "title": "MongoDB",
+    "status": "i-know",
+    "simpleMetaphor": "Stores data in flexible, JSON-like documents instead of rigid table schemas.",
+    "technicalExplanation": "Document-oriented NoSQL database designed for high availability and horizontal scaling.",
+    "worksWellWith": ["Node.js", "Express.js"],
+    "connections": ["node", "express"]
+  },
+  {
+    "id": "redis",
+    "categoryId": "databases-orms",
+    "title": "Redis",
+    "status": "learning",
+    "simpleMetaphor": "Super-fast in-memory cache used for session storage, rate limiting, and temporary data.",
+    "technicalExplanation": "In-memory data structure store used as a database, cache, streaming engine, and message broker.",
+    "worksWellWith": ["Node.js", "PostgreSQL"],
+    "connections": ["node", "postgres"]
+  },
+  {
+    "id": "supabase",
+    "categoryId": "databases-orms",
+    "title": "Supabase",
+    "status": "learning",
+    "simpleMetaphor": "Open-source Firebase alternative powered by PostgreSQL with instant APIs and Auth.",
+    "technicalExplanation": "Backend-as-a-Service providing auto-generated REST/GraphQL APIs, auth, and real-time listeners over Postgres.",
+    "worksWellWith": ["React.js", "Next.js", "PostgreSQL"],
+    "connections": ["react", "next", "postgres"]
+  },
+  {
+    "id": "firebase",
+    "categoryId": "databases-orms",
+    "title": "Firebase",
+    "status": "i-know",
+    "simpleMetaphor": "Google's real-time cloud database and auth platform for quick MVP launches.",
+    "technicalExplanation": "Cloud platform providing Firestore NoSQL database, authentication, hosting, and serverless functions.",
+    "worksWellWith": ["React.js", "Vue.js"],
+    "connections": ["react", "vue"]
+  },
+  {
+    "id": "prisma",
+    "categoryId": "databases-orms",
+    "title": "Prisma ORM",
+    "status": "learning",
+    "simpleMetaphor": "Typesafe translator to query databases in TypeScript without writing raw SQL strings.",
+    "technicalExplanation": "Next-generation ORM featuring auto-generated type declarations and declarative schema migrations.",
+    "worksWellWith": ["Node.js", "PostgreSQL", "Next.js", "TypeScript"],
+    "connections": ["node", "postgres", "next", "typescript"]
+  },
+  {
+    "id": "drizzle",
+    "categoryId": "databases-orms",
+    "title": "Drizzle ORM",
+    "status": "to-explore",
+    "simpleMetaphor": "Lightweight TypeScript ORM that feels like writing clean SQL with autocomplete.",
+    "technicalExplanation": "Headless TypeScript ORM with zero dependencies and maximum query performance.",
+    "worksWellWith": ["TypeScript", "PostgreSQL", "Next.js"],
+    "connections": ["typescript", "postgres", "next"]
+  },
+  {
+    "id": "vector-dbs",
+    "categoryId": "databases-orms",
+    "title": "Vector DBs (Pinecone)",
+    "status": "to-explore",
+    "simpleMetaphor": "Specialized database that stores AI embeddings to search data by semantic meaning.",
+    "technicalExplanation": "Vector index database optimized for high-dimensional similarity searches in RAG pipelines.",
+    "worksWellWith": ["OpenAI API", "Next.js", "Node.js"],
+    "connections": ["openai-api", "next", "node"]
+  }
+]

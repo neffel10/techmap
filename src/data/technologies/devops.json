@@ -1,0 +1,72 @@
+[
+  {
+    "id": "docker",
+    "categoryId": "devops-cloud",
+    "title": "Docker",
+    "status": "learning",
+    "simpleMetaphor": "Packages your app and dependencies into a container so it runs identically anywhere.",
+    "technicalExplanation": "Containerization platform isolating software in lightweight virtualized units.",
+    "worksWellWith": ["Node.js", "PostgreSQL", "GitHub Actions"],
+    "connections": ["node", "postgres", "github-actions"]
+  },
+  {
+    "id": "kubernetes",
+    "categoryId": "devops-cloud",
+    "title": "Kubernetes",
+    "status": "to-explore",
+    "simpleMetaphor": "An automated fleet manager for orchestrating hundreds of Docker containers.",
+    "technicalExplanation": "Container orchestration system for automating application deployment, scaling, and management.",
+    "worksWellWith": ["Docker", "AWS"],
+    "connections": ["docker", "aws"]
+  },
+  {
+    "id": "aws",
+    "categoryId": "devops-cloud",
+    "title": "AWS (S3, Lambda)",
+    "status": "learning",
+    "simpleMetaphor": "Amazon's massive cloud infrastructure for file storage, serverless functions, and hosting.",
+    "technicalExplanation": "Industry-leading cloud platform providing object storage (S3), serverless compute (Lambda), and infrastructure.",
+    "worksWellWith": ["Node.js", "Docker", "Next.js"],
+    "connections": ["node", "docker", "next"]
+  },
+  {
+    "id": "vercel",
+    "categoryId": "devops-cloud",
+    "title": "Vercel",
+    "status": "i-know",
+    "simpleMetaphor": "Instant Git-driven hosting platform optimized for modern frontend frameworks.",
+    "technicalExplanation": "Cloud platform for static sites and serverless functions with seamless GitHub deployment integration.",
+    "worksWellWith": ["Next.js", "React.js", "Tailwind CSS"],
+    "connections": ["next", "react", "tailwind"]
+  },
+  {
+    "id": "cloudflare-workers",
+    "categoryId": "devops-cloud",
+    "title": "Cloudflare Workers",
+    "status": "to-explore",
+    "simpleMetaphor": "Runs serverless JavaScript code directly at edge locations closest to your users.",
+    "technicalExplanation": "Edge computing platform running serverless code globally on Cloudflare's CDN network.",
+    "worksWellWith": ["TypeScript", "REST API"],
+    "connections": ["typescript", "rest-api"]
+  },
+  {
+    "id": "nginx",
+    "categoryId": "devops-cloud",
+    "title": "Nginx",
+    "status": "i-know",
+    "simpleMetaphor": "High-speed web server and traffic cop directing incoming requests to backends.",
+    "technicalExplanation": "HTTP web server, reverse proxy, load balancer, and HTTP cache.",
+    "worksWellWith": ["Docker", "Node.js"],
+    "connections": ["docker", "node"]
+  },
+  {
+    "id": "github-actions",
+    "categoryId": "devops-cloud",
+    "title": "CI/CD (GitHub Actions)",
+    "status": "learning",
+    "simpleMetaphor": "Automates testing, building, and deploying code every time you make a git push.",
+    "technicalExplanation": "Automated workflow engine directly integrated into GitHub repositories for continuous deployment.",
+    "worksWellWith": ["Docker", "Vercel", "Vitest"],
+    "connections": ["docker", "vercel", "vitest"]
+  }
+]

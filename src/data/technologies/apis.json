@@ -1,0 +1,72 @@
+[
+  {
+    "id": "rest-api",
+    "categoryId": "apis-communication",
+    "title": "REST API",
+    "status": "i-know",
+    "simpleMetaphor": "Standard HTTP requests (GET, POST) delivering formatted JSON responses.",
+    "technicalExplanation": "Resource-based API architectural style using standard HTTP protocols and JSON payloads.",
+    "worksWellWith": ["Node.js", "React.js", "PostgreSQL"],
+    "connections": ["node", "react", "postgres"]
+  },
+  {
+    "id": "graphql",
+    "categoryId": "apis-communication",
+    "title": "GraphQL",
+    "status": "to-explore",
+    "simpleMetaphor": "Request exact fields in a single query instead of hitting multiple API endpoints.",
+    "technicalExplanation": "Query language and server runtime that allows clients to specify exact data shapes.",
+    "worksWellWith": ["React.js", "Next.js", "Node.js"],
+    "connections": ["react", "next", "node"]
+  },
+  {
+    "id": "grpc",
+    "categoryId": "apis-communication",
+    "title": "gRPC",
+    "status": "to-explore",
+    "simpleMetaphor": "High-speed binary communication protocol for backend microservices.",
+    "technicalExplanation": "High-performance Remote Procedure Call framework using Protocol Buffers over HTTP/2.",
+    "worksWellWith": ["Node.js", "Docker", "Go"],
+    "connections": ["node", "docker", "go"]
+  },
+  {
+    "id": "websockets",
+    "categoryId": "apis-communication",
+    "title": "WebSockets",
+    "status": "learning",
+    "simpleMetaphor": "Persistent open connection for instant, real-time live chat or updates.",
+    "technicalExplanation": "Bi-directional, full-duplex communication channel over a single TCP socket.",
+    "worksWellWith": ["Node.js", "React.js", "Express.js"],
+    "connections": ["node", "react", "express"]
+  },
+  {
+    "id": "sse",
+    "categoryId": "apis-communication",
+    "title": "Server-Sent Events (SSE)",
+    "status": "to-explore",
+    "simpleMetaphor": "One-way stream from server to client, perfect for live AI responses or stock tickers.",
+    "technicalExplanation": "Standard HTTP interface enabling servers to push real-time text updates to client browsers.",
+    "worksWellWith": ["Next.js", "Node.js", "OpenAI API"],
+    "connections": ["next", "node", "openai-api"]
+  },
+  {
+    "id": "webhooks",
+    "categoryId": "apis-communication",
+    "title": "Webhooks",
+    "status": "i-know",
+    "simpleMetaphor": "Automated notification sent from one server to another when an event happens.",
+    "technicalExplanation": "Event-driven HTTP POST callbacks triggered by external services (e.g., Stripe payments).",
+    "worksWellWith": ["Express.js", "Next.js", "Node.js"],
+    "connections": ["express", "next", "node"]
+  },
+  {
+    "id": "trpc",
+    "categoryId": "apis-communication",
+    "title": "tRPC",
+    "status": "to-explore",
+    "simpleMetaphor": "Typesafe API bridge between frontend and backend without writing manual schemas.",
+    "technicalExplanation": "End-to-end typesafe API layer taking advantage of TypeScript type inference.",
+    "worksWellWith": ["React.js", "Next.js", "TypeScript"],
+    "connections": ["react", "next", "typescript"]
+  }
+]

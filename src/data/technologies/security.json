@@ -1,0 +1,82 @@
+[
+  {
+    "id": "jwt",
+    "categoryId": "auth-security",
+    "title": "JWT (JSON Web Tokens)",
+    "status": "i-know",
+    "simpleMetaphor": "A secure digital badge that proves your user identity across API requests.",
+    "technicalExplanation": "Compact, URL-safe means of representing claims to be transferred between two parties statelessly.",
+    "worksWellWith": ["Node.js", "Express.js", "REST API"],
+    "connections": ["node", "express", "rest-api"]
+  },
+  {
+    "id": "oauth",
+    "categoryId": "auth-security",
+    "title": "OAuth 2.0",
+    "status": "learning",
+    "simpleMetaphor": "'Log in with Google/GitHub' button protocol without sharing your actual password.",
+    "technicalExplanation": "Industry-standard authorization framework enabling secure third-party delegated access.",
+    "worksWellWith": ["Next.js", "Node.js", "Clerk"],
+    "connections": ["next", "node", "clerk"]
+  },
+  {
+    "id": "auth0",
+    "categoryId": "auth-security",
+    "title": "Auth0",
+    "status": "to-explore",
+    "simpleMetaphor": "Enterprise identity platform handling logins, multi-factor auth, and user security.",
+    "technicalExplanation": "Flexible cloud identity solution providing authentication and authorization as a service.",
+    "worksWellWith": ["React.js", "Next.js", "Node.js"],
+    "connections": ["react", "next", "node"]
+  },
+  {
+    "id": "clerk",
+    "categoryId": "auth-security",
+    "title": "Clerk",
+    "status": "learning",
+    "simpleMetaphor": "Pre-built, beautiful authentication components for React and Next.js.",
+    "technicalExplanation": "Complete user management and authentication suite with drop-in React components.",
+    "worksWellWith": ["React.js", "Next.js", "Tailwind CSS"],
+    "connections": ["react", "next", "tailwind"]
+  },
+  {
+    "id": "authjs",
+    "categoryId": "auth-security",
+    "title": "NextAuth / Auth.js",
+    "status": "learning",
+    "simpleMetaphor": "The open-source authentication library built specifically for Next.js applications.",
+    "technicalExplanation": "Flexible open-source authentication library supporting OAuth providers, JWTs, and database adapters.",
+    "worksWellWith": ["Next.js", "Prisma", "TypeScript"],
+    "connections": ["next", "prisma", "typescript"]
+  },
+  {
+    "id": "cors",
+    "categoryId": "auth-security",
+    "title": "CORS",
+    "status": "i-know",
+    "simpleMetaphor": "Browser security rule that decides which websites are allowed to request data from your API.",
+    "technicalExplanation": "Cross-Origin Resource Sharing HTTP-header based mechanism allowing restricted resource sharing.",
+    "worksWellWith": ["Express.js", "Node.js", "REST API"],
+    "connections": ["express", "node", "rest-api"]
+  },
+  {
+    "id": "https-ssl",
+    "categoryId": "auth-security",
+    "title": "HTTPS / SSL",
+    "status": "i-know",
+    "simpleMetaphor": "Encrypts web traffic between browser and server so eavesdroppers cannot read it.",
+    "technicalExplanation": "Transport Layer Security (TLS/SSL) protocol ensuring encrypted HTTP communication.",
+    "worksWellWith": ["Nginx", "Vercel"],
+    "connections": ["nginx", "vercel"]
+  },
+  {
+    "id": "rate-limiting",
+    "categoryId": "auth-security",
+    "title": "Rate Limiting",
+    "status": "learning",
+    "simpleMetaphor": "Prevents bots from spamming your API by limiting requests per minute.",
+    "technicalExplanation": "Security technique used to control incoming network traffic rates and prevent DDoS attacks.",
+    "worksWellWith": ["Express.js", "Redis"],
+    "connections": ["express", "redis"]
+  }
+]
