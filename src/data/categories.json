@@ -25,7 +25,7 @@
     "title": "Backend & Runtimes",
     "color": "bg-green-500",
     "icon": "server",
-    "image": "https://images.unsplash.com/photo-1579274216947-86eaa4b00475?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80"
   },
   {
     "id": "databases-orms",
@@ -67,6 +67,6 @@
     "title": "AI & Developer Tools",
     "color": "bg-rose-500",
     "icon": "cpu",
-    "image": "https://images.unsplash.com/photo-1677442136019-21780efad99a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+    "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80"
   }
 ]

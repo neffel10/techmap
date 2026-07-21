@@ -69,11 +69,11 @@ export function ComparisonModal({ comparison, technologies, onClose }) {
   const getDifficultyBadge = (difficulty) => {
     switch (difficulty) {
       case 'easy':
-        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-300">Easy</span>;
+        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Easy</span>;
       case 'medium':
-        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">Medium</span>;
+        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30">Medium</span>;
       case 'hard':
-        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-700 border border-rose-300">Hard</span>;
+        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30">Hard</span>;
       default:
         return null;
     }
@@ -81,22 +81,22 @@ export function ComparisonModal({ comparison, technologies, onClose }) {
 
   return (
     <div 
-      className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto"
+      className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200"
       onClick={onClose}
     >
       <div 
-        className="w-full max-w-5xl max-h-[90vh] bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-y-auto my-auto p-6 md:p-8 relative"
+        className="w-full max-w-5xl max-h-[90vh] bg-slate-900 text-slate-100 rounded-3xl shadow-2xl border border-slate-800 overflow-y-auto my-auto p-6 md:p-8 relative animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 mb-6 pb-2">
+        <div className="flex items-start justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">{comparison.title}</h2>
-            <p className="text-slate-500 text-sm mt-1">{comparison.explanation}</p>
+            <h2 className="text-2xl font-extrabold text-white tracking-tight">{comparison.title}</h2>
+            <p className="text-slate-400 text-xs sm:text-sm mt-1 leading-relaxed">{comparison.explanation}</p>
           </div>
           <button 
             onClick={onClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"
           >
             <X className="w-5 h-5" />
           </button>
@@ -111,33 +111,35 @@ export function ComparisonModal({ comparison, technologies, onClose }) {
             return (
               <div 
                 key={techId}
-                className={`p-5 rounded-2xl border-2 transition-all flex flex-col justify-between ${
-                  isWinner ? 'border-amber-400 bg-amber-50/30' : 'border-slate-200/80 bg-white'
+                className={`p-5 rounded-2xl border transition-all flex flex-col justify-between ${
+                  isWinner 
+                    ? 'border-amber-500/50 bg-amber-950/10 shadow-lg shadow-amber-950/20' 
+                    : 'border-slate-800 bg-slate-950/60'
                 }`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
                       <span className="text-2xl">{tech.emoji}</span>
-                      <span className="font-bold text-slate-900 text-base">{tech.title}</span>
+                      <span className="font-bold text-white text-base">{tech.title}</span>
                     </div>
                     {isWinner && (
-                      <span className="px-3 py-1 text-[11px] font-bold bg-amber-400 text-amber-950 rounded-full shadow-sm">
+                      <span className="px-2.5 py-0.5 text-[10px] font-bold bg-amber-400 text-amber-950 rounded-full shadow-xs">
                         Most Popular
                       </span>
                     )}
                   </div>
 
                   {tech.marketShare && (
-                    <div className="flex items-center gap-2 mb-2 text-xs text-slate-600 font-medium">
-                      <TrendingUp className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                    <div className="flex items-center gap-2 mb-2 text-xs text-slate-400 font-medium">
+                      <TrendingUp className="w-3.5 h-3.5 text-blue-400 shrink-0" />
                       <span>{tech.marketShare}</span>
                     </div>
                   )}
 
                   {tech.learningCurve && (
-                    <div className="flex items-center gap-2 mb-3 text-xs text-slate-700 font-medium">
-                      <Zap className="w-3.5 h-3.5 text-purple-600 shrink-0" />
+                    <div className="flex items-center gap-2 mb-3 text-xs text-slate-300 font-medium">
+                      <Zap className="w-3.5 h-3.5 text-purple-400 shrink-0" />
                       <span>Learning curve:</span>
                       {getDifficultyBadge(tech.learningCurve)}
                     </div>
@@ -149,7 +151,7 @@ export function ComparisonModal({ comparison, technologies, onClose }) {
                         {Array.from({ length: 10 }).map((_, i) => (
                           <div
                             key={i}
-                            className={`w-2 h-2 rounded-full ${i < tech.popularity ? 'bg-blue-600' : 'bg-slate-200'}`}
+                            className={`w-2 h-2 rounded-full ${i < tech.popularity ? 'bg-purple-500 shadow-xs shadow-purple-500/50' : 'bg-slate-800'}`}
                           />
                         ))}
                       </div>
@@ -159,9 +161,9 @@ export function ComparisonModal({ comparison, technologies, onClose }) {
                 </div>
 
                 {tech.projectSize && (
-                  <div className="flex flex-wrap gap-1.5 pt-2 border-t border-slate-100">
+                  <div className="flex flex-wrap gap-1.5 pt-3 border-t border-slate-800/80">
                     {tech.projectSize.map((size) => (
-                      <span key={size} className="px-2.5 py-1 bg-slate-100/90 text-slate-700 rounded-lg text-[11px] font-medium flex items-center gap-1.5 border border-slate-200">
+                      <span key={size} className="px-2.5 py-1 bg-slate-900 text-slate-300 rounded-lg text-[10px] font-medium flex items-center gap-1.5 border border-slate-800">
                         {getProjectSizeIcon(size)}
                         {getProjectSizeLabel(size)}
                       </span>
@@ -175,7 +177,7 @@ export function ComparisonModal({ comparison, technologies, onClose }) {
 
         {/* 2. When to Use Section */}
         <div className="mb-8">
-          <h3 className="text-base font-bold text-slate-900 mb-3">When to use each?</h3>
+          <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wider mb-3">When to use each?</h3>
           <div className="space-y-3">
             {comparison.whenToUse.map((item) => {
               const tech = getTechData(item.techId);
@@ -183,14 +185,14 @@ export function ComparisonModal({ comparison, technologies, onClose }) {
               return (
                 <div 
                   key={item.techId} 
-                  className="p-4 bg-[#F5F7FF] border border-blue-100 rounded-2xl flex items-start gap-3 shadow-2xs"
+                  className="p-4 bg-slate-950/70 border border-slate-800 rounded-2xl flex items-start gap-3 shadow-inner"
                 >
                   <span className="text-2xl mt-0.5">{tech.emoji}</span>
                   <div>
-                    <span className="font-bold text-slate-900 text-sm block mb-0.5">
+                    <span className="font-bold text-white text-sm block mb-0.5">
                       {tech.title}
                     </span>
-                    <p className="text-slate-600 text-xs leading-relaxed">
+                    <p className="text-slate-400 text-xs leading-relaxed">
                       {item.scenario}
                     </p>
                   </div>
@@ -203,7 +205,7 @@ export function ComparisonModal({ comparison, technologies, onClose }) {
         {/* 3. Transition Difficulty Section */}
         {comparison.transitionDifficulty && comparison.transitionDifficulty.length > 0 && (
           <div>
-            <h3 className="text-base font-bold text-slate-900 mb-3">Transition difficulty between technologies</h3>
+            <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wider mb-3">Transition difficulty between technologies</h3>
             <div className="space-y-2.5">
               {comparison.transitionDifficulty.map((transition, index) => {
                 const fromTech = getTechData(transition.from);
@@ -212,19 +214,19 @@ export function ComparisonModal({ comparison, technologies, onClose }) {
                 return (
                   <div 
                     key={index} 
-                    className="p-3.5 bg-white border border-slate-200/90 rounded-2xl flex items-center justify-between shadow-2xs"
+                    className="p-3.5 bg-slate-950/70 border border-slate-800 rounded-2xl flex items-center justify-between shadow-inner"
                   >
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg">{fromTech.emoji}</span>
-                      <span className="font-bold text-slate-900 text-xs">{fromTech.title}</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-slate-400 mx-1" />
-                      <span className="text-lg">{toTech.emoji}</span>
-                      <span className="font-bold text-slate-900 text-xs">{toTech.title}</span>
+                    <div className="flex items-center gap-2 truncate">
+                      <span className="text-base">{fromTech.emoji}</span>
+                      <span className="font-bold text-white text-xs">{fromTech.title}</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-slate-600 mx-1 shrink-0" />
+                      <span className="text-base">{toTech.emoji}</span>
+                      <span className="font-bold text-white text-xs">{toTech.title}</span>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 shrink-0">
                       {getDifficultyBadge(transition.difficulty)}
-                      <span className="text-xs font-medium text-slate-500">{transition.timeEstimate}</span>
+                      <span className="text-xs font-medium text-slate-400">{transition.timeEstimate}</span>
                     </div>
                   </div>
                 );
