@@ -26,10 +26,11 @@ import {
   User
 } from 'lucide-react';
 
-// Import local modular data
+// Import local modular data & components
 import { categories as initialCategories, comparisons, technologies as initialTechnologies } from './data';
 import { ComparisonModal } from './components/ComparisonModal';
 import { CareerQuizModal } from './components/CareerQuizModal';
+import AIKnowledgeWorkspace from './components/AIWorkspace/AIKnowledgeWorkspace';
 
 // Robust Helper component for monochromatic white SVG logos
 const TechLogo = ({ tech, className = "w-5 h-5" }) => {
@@ -96,11 +97,14 @@ export default function App() {
   const [modeNotification, setModeNotification] = useState(null);
   const [showRestoreConfirm, setShowRestoreConfirm] = useState(false);
 
+  // AI Knowledge Workspace State
+  const [activeTechForInfo, setActiveTechForInfo] = useState(null);
+
   // AI Roadmap Filter & Mandatory Onboarding
   const [aiRoadmapFilter, setAiRoadmapFilter] = useState(null);
   const [isAiModalOpen, setIsAiModalOpen] = useState(() => {
     const completed = localStorage.getItem('techmap-ai-completed');
-    return !completed; // Abre a fuerzas si NO lo ha completado antes
+    return !completed; // Force open if user hasn't completed onboarding
   });
 
   // Comparisons Banner Toggle State
@@ -151,6 +155,22 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('techmap-hidden-categories', JSON.stringify(hiddenCategoryIds));
   }, [hiddenCategoryIds]);
+
+  // Open AI Workspace Handler
+  const handleOpenAiWorkspace = (e, tech) => {
+    e.stopPropagation();
+    setActiveTechForInfo({
+      ...tech,
+      name: tech.title || tech.name,
+      aiData: tech.aiData || {
+        description: tech.technicalExplanation || tech.simpleMetaphor,
+        useCases: ["Production Scalability", "Modern Web Architecture", "High-Performance Workflows"],
+        successStories: ["Vercel", "Meta", "Netflix", "Shopify"],
+        directCompetitors: ["Alternative Tool A", "Alternative Tool B"],
+        simpleMetaphor: tech.simpleMetaphor || "An essential tool for modern software engineering."
+      }
+    });
+  };
 
   // Toast Notification
   const handleModeSwitch = (simple) => {
@@ -431,14 +451,14 @@ export default function App() {
             {/* Logo & Title */}
             <div className="flex items-center gap-2.5 shrink-0">
               <div 
-                onClick={() => { setViewMode('atlas'); setSelectedCategoryId(null); setSearchQuery(''); setStatusFilter('all'); setAiRoadmapFilter(null); }}
+                onClick={() => { setViewMode('atlas'); setSelectedCategoryId(null); setSearchQuery(''); setStatusFilter('all'); setAiRoadmapFilter(null); setActiveTechForInfo(null); }}
                 className="p-2 bg-gradient-to-tr from-purple-600 to-indigo-600 text-white rounded-xl shadow-md cursor-pointer shrink-0"
               >
                 <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
               <div>
                 <h1 
-                  onClick={() => { setViewMode('atlas'); setSelectedCategoryId(null); setSearchQuery(''); setStatusFilter('all'); setAiRoadmapFilter(null); }}
+                  onClick={() => { setViewMode('atlas'); setSelectedCategoryId(null); setSearchQuery(''); setStatusFilter('all'); setAiRoadmapFilter(null); setActiveTechForInfo(null); }}
                   className={`text-base sm:text-lg font-bold leading-none tracking-tight cursor-pointer ${isDarkMode ? 'text-white' : 'text-slate-900'}`}
                 >
                   TechMap
@@ -449,10 +469,10 @@ export default function App() {
               </div>
             </div>
 
-            {/* Right Controls - UNIFIED HEIGHT (h-9) & MATCHING BORDER/BACKGROUND */}
+            {/* Right Controls */}
             <div className="flex items-center gap-2 shrink-0">
               
-              {/* ⚖️ COMPARE TOOLS BUTTON WITH DEGRADADO */}
+              {/* Compare Tools Button */}
               {comparisons && comparisons.length > 0 && (
                 <button
                   onClick={() => setShowComparisonBanner(!showComparisonBanner)}
@@ -467,7 +487,7 @@ export default function App() {
                 </button>
               )}
 
-              {/* 👤 ADMIN USER ICON (Mismo BG & Border que Light/Dark mode) */}
+              {/* Admin User Icon */}
               <button
                 onClick={() => setViewMode(viewMode === 'atlas' ? 'admin' : 'atlas')}
                 className={`h-9 w-9 rounded-xl transition-all border active:scale-95 flex items-center justify-center shrink-0 ${
@@ -523,7 +543,7 @@ export default function App() {
           </div>
         </header>
 
-        {/* 2. TOP BANNER DE COMPARACIONES (CON FLEX-WRAP Y SIN BOTÓN X) */}
+        {/* 2. TOP BANNER DE COMPARACIONES */}
         {showComparisonBanner && comparisons && comparisons.length > 0 && (
           <div className="bg-slate-900/95 border-b border-indigo-500/30 p-3.5 animate-in slide-in-from-top duration-200">
             <div className="max-w-7xl mx-auto px-4">
@@ -657,7 +677,6 @@ export default function App() {
                     Portal Connections (Link to Existing Tools):
                   </label>
 
-                  {/* Added Portals Chips */}
                   <div className="flex flex-wrap gap-1.5 mb-2.5">
                     {newCard.connections.map((connId) => {
                       const connectedTech = techList.find(t => t.id === connId);
@@ -680,7 +699,6 @@ export default function App() {
                     })}
                   </div>
 
-                  {/* Search Input for Candidate Portals */}
                   <div className="relative max-w-md">
                     <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input
@@ -693,7 +711,6 @@ export default function App() {
                       }`}
                     />
 
-                    {/* Candidate Search Dropdown */}
                     {portalSearch.trim() !== '' && (
                       <div className="absolute top-full left-0 right-0 mt-1 z-20 bg-slate-900 border border-slate-800 rounded-xl shadow-xl max-h-40 overflow-y-auto p-1">
                         {portalCandidates.length > 0 ? (
@@ -750,7 +767,6 @@ export default function App() {
                         : isDarkMode ? 'bg-slate-900/80 border-slate-800' : 'bg-white border-slate-200'
                     }`}
                   >
-                    {/* CATEGORY HEADER CONTROL */}
                     <div className="p-4 flex items-center justify-between border-b border-slate-800/80 bg-slate-900/90">
                       <div className="flex items-center gap-3">
                         <span className={`w-2.5 h-2.5 rounded-full ${isCategoryHidden ? 'bg-red-500' : 'bg-emerald-400'}`} />
@@ -758,7 +774,6 @@ export default function App() {
                         <span className="text-xs font-mono font-bold text-slate-500">({categoryCards.length} cards)</span>
                       </div>
 
-                      {/* MASTER TOGGLE ENTIRE CATEGORY */}
                       <button
                         onClick={() => toggleCategoryVisibility(category.id)}
                         className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition flex items-center gap-1.5 ${
@@ -781,7 +796,6 @@ export default function App() {
                       </button>
                     </div>
 
-                    {/* CARDS LIST INSIDE CATEGORY */}
                     <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                       {categoryCards.map((tech) => (
                         <div
@@ -810,7 +824,6 @@ export default function App() {
                           </div>
 
                           <div className="flex items-center gap-1.5 shrink-0">
-                            {/* Hide / Show Card Button */}
                             <button
                               onClick={() => toggleCardVisibility(tech.id)}
                               className={`p-1.5 rounded-lg border transition ${
@@ -823,7 +836,6 @@ export default function App() {
                               {tech.isHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                             </button>
 
-                            {/* DELETE BUTTON (ONLY FOR CUSTOM CARDS) */}
                             {tech.isCustom && (
                               <button
                                 onClick={() => handleDeleteCustomCard(tech.id)}
@@ -924,7 +936,7 @@ export default function App() {
                 {isGlobalFilterActive && (
                   <button
                     onClick={() => { setStatusFilter('all'); setSearchQuery(''); setAiRoadmapFilter(null); }}
-                    className="px-2.5 py-1 text-[11px] font-bold text-purple-400 hover:text-purple-300 bg-purple-950/40 border border-purple-500/30 rounded-xl flex items-center gap-1"
+                    className="px-2.5 py-1 text-[11px] font-bold text-purple-400 hover:text-purple-300 bg-purple-950/40 border border-purple-500/30 rounded-xl flex items-center gap-1 cursor-pointer"
                   >
                     <span>Reset filter</span>
                     <X className="w-3 h-3" />
@@ -951,7 +963,7 @@ export default function App() {
 
                   <button
                     onClick={() => setAiRoadmapFilter(null)}
-                    className="px-3 py-1.5 bg-slate-900/80 hover:bg-slate-900 text-xs font-bold text-slate-300 rounded-xl border border-slate-700 flex items-center gap-1.5 active:scale-95 transition shrink-0"
+                    className="px-3 py-1.5 bg-slate-900/80 hover:bg-slate-900 text-xs font-bold text-slate-300 rounded-xl border border-slate-700 flex items-center gap-1.5 active:scale-95 transition shrink-0 cursor-pointer"
                   >
                     <span>Clear AI Filter</span>
                     <X className="w-3.5 h-3.5" />
@@ -960,185 +972,225 @@ export default function App() {
               )}
             </section>
 
-            {/* Atlas Cards Container */}
-            <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-2 flex flex-col justify-stretch">
+            {/* Atlas Cards Container with Split View Layout */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-2 flex flex-col lg:flex-row gap-6 items-start">
               
-              {/* Home Category Grid (Excludes Hidden Categories) */}
-              {!selectedCategoryId && !isGlobalFilterActive && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-3.5 animate-in fade-in duration-200 min-h-[calc(100vh-250px)] h-full">
-                  {visibleCategories.map((category) => {
-                    const categoryTechsCount = techList.filter((t) => t.categoryId === category.id && !t.isHidden).length;
-
-                    return (
-                      <div
-                        key={category.id}
-                        onClick={() => setSelectedCategoryId(category.id)}
-                        className={`group relative rounded-2xl overflow-hidden border cursor-pointer transition-all duration-300 hover:-translate-y-0.5 flex flex-col items-center justify-center p-4 text-center h-full ${
-                          isDarkMode ? 'bg-slate-900 border-slate-800 hover:border-purple-500/50' : 'bg-white border-slate-200'
-                        }`}
-                      >
-                        <img 
-                          src={category.image} 
-                          alt={category.title} 
-                          className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-500"
-                        />
-                        <div className={`absolute inset-0 bg-gradient-to-t ${
-                          isDarkMode ? 'from-slate-950 via-slate-950/80 to-slate-950/40' : 'from-slate-900/90 via-slate-900/60 to-transparent'
-                        }`} />
-
-                        <span className="absolute top-3 left-3 z-10 text-[10px] font-mono font-bold text-slate-200 bg-slate-950/80 border border-slate-700/60 backdrop-blur-md px-2 py-0.5 rounded-lg">
-                          {categoryTechsCount} tools
-                        </span>
-
-                        <div className="absolute top-3 right-3 z-10 w-6 h-6 rounded-lg bg-white/10 group-hover:bg-purple-600 border border-white/20 backdrop-blur-md flex items-center justify-center text-white transition-all">
-                          <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                        </div>
-
-                        <div className="relative z-10 px-2 my-auto flex items-center justify-center">
-                          <h3 className="text-xs sm:text-sm font-extrabold text-white tracking-tight leading-snug drop-shadow-md text-center">
-                            {category.title}
-                          </h3>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-
-              {/* Multi-Category Unrolled View */}
-              {(selectedCategoryId || isGlobalFilterActive) && (
-                <div className="flex flex-col gap-4 animate-in fade-in duration-200 pb-4">
-                  {visibleCategories
-                    .filter((cat) => isGlobalFilterActive ? true : cat.id === selectedCategoryId)
-                    .map((category) => {
-                      const categoryTechs = filteredTechnologies.filter((t) => t.categoryId === category.id);
-                      if (categoryTechs.length === 0) return null;
+              <main className={`flex-1 w-full flex flex-col justify-stretch transition-all duration-300 ${
+                activeTechForInfo ? 'lg:w-[25%] shrink-0 overflow-y-auto max-h-[calc(100vh-140px)] pr-1' : 'max-w-7xl mx-auto'
+              }`}>
+                
+                {/* Home Category Grid */}
+                {!selectedCategoryId && !isGlobalFilterActive && (
+                  <div className={`grid gap-3 sm:gap-3.5 animate-in fade-in duration-200 ${
+                    activeTechForInfo 
+                      ? 'grid-cols-1 sm:grid-cols-2' 
+                      : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 min-h-[calc(100vh-250px)] h-full'
+                  }`}>
+                    {visibleCategories.map((category) => {
+                      const categoryTechsCount = techList.filter((t) => t.categoryId === category.id && !t.isHidden).length;
 
                       return (
-                        <section 
-                          key={category.id} 
-                          className={`border rounded-2xl overflow-hidden shadow-xl ${
-                            isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
+                        <div
+                          key={category.id}
+                          onClick={() => setSelectedCategoryId(category.id)}
+                          className={`group relative rounded-2xl overflow-hidden border cursor-pointer transition-all duration-300 hover:-translate-y-0.5 flex flex-col items-center justify-center p-4 text-center h-full ${
+                            isDarkMode ? 'bg-slate-900 border-slate-800 hover:border-purple-500/50' : 'bg-white border-slate-200'
                           }`}
                         >
-                          <div className="relative overflow-hidden h-16 sm:h-20 flex items-center justify-between p-4 select-none">
-                            <img src={category.image} alt={category.title} className="absolute inset-0 w-full h-full object-cover opacity-40" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent" />
+                          <img 
+                            src={category.image} 
+                            alt={category.title} 
+                            className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-500"
+                          />
+                          <div className={`absolute inset-0 bg-gradient-to-t ${
+                            isDarkMode ? 'from-slate-950 via-slate-950/80 to-slate-950/40' : 'from-slate-900/90 via-slate-900/60 to-transparent'
+                          }`} />
 
-                            <div className="relative z-10 flex items-center gap-3">
-                              <button
-                                onClick={() => { setSelectedCategoryId(null); setSearchQuery(''); setStatusFilter('all'); setAiRoadmapFilter(null); }}
-                                className="px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white hover:bg-purple-600 flex items-center gap-1.5 font-bold text-xs shrink-0"
-                              >
-                                <ArrowLeft className="w-3.5 h-3.5 text-purple-300" />
-                                <span>Back to Categories</span>
-                              </button>
+                          {/* Categories Counter <span className="absolute top-3 left-3 z-10 text-[10px] font-mono font-bold text-slate-200 bg-slate-950/80 border border-slate-700/60 backdrop-blur-md px-2 py-0.5 rounded-lg">
+                            {categoryTechsCount} tools
+                          </span> */}
 
-                              <div>
-                                <h2 className="text-sm sm:text-base font-extrabold text-white">{category.title}</h2>
-                                <p className="text-[11px] font-bold text-slate-400">{categoryTechs.length} technologies listed</p>
-                              </div>
-                            </div>
+                          <div className="absolute top-3 right-3 z-10 w-6 h-6 rounded-lg bg-white/10 group-hover:bg-purple-600 border border-white/20 backdrop-blur-md flex items-center justify-center text-white transition-all">
+                            <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                           </div>
 
-                          <div className="p-3.5 sm:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 border-t border-slate-800 bg-slate-950/60">
-                            {categoryTechs.map((tech) => {
-                              const isSelected = selectedTechId === tech.id;
-                              const isConnected = selectedTechId && tech.connections?.includes(selectedTechId);
+                          <div className="relative z-10 px-2 my-auto flex items-center justify-center">
+                            <h3 className="text-xs sm:text-sm font-extrabold text-white tracking-tight leading-snug drop-shadow-md text-center">
+                              {category.title}
+                            </h3>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
 
-                              return (
-                                <article
-                                  key={tech.id}
-                                  id={`tech-card-${tech.id}`}
-                                  onClick={() => handleTechClick(tech.id)}
-                                  className={`p-4 rounded-xl border transition-all cursor-pointer relative flex flex-col justify-between ${
-                                    isSelected
-                                      ? 'bg-slate-900 border-purple-500 ring-2 ring-purple-500/30'
-                                      : isConnected
-                                      ? 'bg-emerald-950/30 border-emerald-500/80 ring-2 ring-emerald-500/20 shadow-lg shadow-emerald-950/30'
-                                      : 'bg-slate-900/90 border-slate-800 hover:border-slate-700'
-                                  }`}
+                {/* Multi-Category Unrolled View */}
+                {(selectedCategoryId || isGlobalFilterActive) && (
+                  <div className="flex flex-col gap-4 animate-in fade-in duration-200 pb-4">
+                    {visibleCategories
+                      .filter((cat) => isGlobalFilterActive ? true : cat.id === selectedCategoryId)
+                      .map((category) => {
+                        const categoryTechs = filteredTechnologies.filter((t) => t.categoryId === category.id);
+                        if (categoryTechs.length === 0) return null;
+
+                        return (
+                          <section 
+                            key={category.id} 
+                            className={`border rounded-2xl overflow-hidden shadow-xl ${
+                              isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
+                            }`}
+                          >
+                            <div className="relative overflow-hidden h-16 sm:h-20 flex items-center justify-between p-4 select-none">
+                              <img src={category.image} alt={category.title} className="absolute inset-0 w-full h-full object-cover opacity-40" />
+                              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent" />
+
+                              <div className="relative z-10 flex items-center gap-3">
+                                <button
+                                  onClick={() => { setSelectedCategoryId(null); setSearchQuery(''); setStatusFilter('all'); setAiRoadmapFilter(null); }}
+                                  className="px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white hover:bg-purple-600 flex items-center gap-1.5 font-bold text-xs shrink-0 cursor-pointer"
                                 >
-                                  <div>
-                                    <div className="flex items-center justify-between mb-2.5">
-                                      <div className="flex items-center gap-2.5">
-                                        <div className="p-1.5 rounded-lg border bg-slate-800 border-slate-700 flex items-center justify-center">
-                                          <TechLogo tech={tech} className="w-4 h-4" />
+                                  <ArrowLeft className="w-3.5 h-3.5 text-purple-300" />
+                                  <span>Back to Categories</span>
+                                </button>
+
+                                <div>
+                                  <h2 className="text-sm sm:text-base font-extrabold text-white">{category.title}</h2>
+                                  <p className="text-[11px] font-bold text-slate-400">{categoryTechs.length} technologies listed</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className={`p-3.5 sm:p-5 grid gap-3.5 border-t border-slate-800 bg-slate-950/60 ${
+                              activeTechForInfo ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+                            }`}>
+                              {categoryTechs.map((tech) => {
+                                const isSelected = selectedTechId === tech.id;
+                                const isConnected = selectedTechId && tech.connections?.includes(selectedTechId);
+
+                                return (
+                                  <article
+                                    key={tech.id}
+                                    id={`tech-card-${tech.id}`}
+                                    onClick={() => handleTechClick(tech.id)}
+                                    className={`p-4 rounded-xl border transition-all cursor-pointer relative flex flex-col justify-between ${
+                                      isSelected
+                                        ? 'bg-slate-900 border-purple-500 ring-2 ring-purple-500/30'
+                                        : isConnected
+                                        ? 'bg-emerald-950/30 border-emerald-500/80 ring-2 ring-emerald-500/20 shadow-lg shadow-emerald-950/30'
+                                        : 'bg-slate-900/90 border-slate-800 hover:border-slate-700'
+                                    }`}
+                                  >
+                                    <div>
+                                      <div className="flex items-center justify-between mb-2.5">
+                                        <div className="flex items-center gap-2.5">
+                                          <div className="p-1.5 rounded-lg border bg-slate-800 border-slate-700 flex items-center justify-center">
+                                            <TechLogo tech={tech} className="w-4 h-4" />
+                                          </div>
+
+                                          <h3 className="text-sm font-extrabold text-white">{tech.title}</h3>
+                                          
+                                          {tech.isCustom && (
+                                            <span className="px-1.5 py-0.5 text-[8px] font-extrabold rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30">
+                                              Custom
+                                            </span>
+                                          )}
+
+                                          {isConnected && (
+                                            <span className="px-1.5 py-0.5 text-[8px] font-extrabold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 animate-pulse">
+                                              Connected
+                                            </span>
+                                          )}
                                         </div>
 
-                                        <h3 className="text-sm font-extrabold text-white">{tech.title}</h3>
-                                        
-                                        {tech.isCustom && (
-                                          <span className="px-1.5 py-0.5 text-[8px] font-extrabold rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30">
-                                            Custom
-                                          </span>
-                                        )}
-
-                                        {isConnected && (
-                                          <span className="px-1.5 py-0.5 text-[8px] font-extrabold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 animate-pulse">
-                                            Connected
-                                          </span>
-                                        )}
+                                        <button
+                                          onClick={(e) => handleToggleStatus(e, tech.id)}
+                                          className="w-5 h-5 rounded-full border border-slate-700 bg-slate-800 flex items-center justify-center"
+                                        >
+                                          {tech.status === 'i-know' && <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full" />}
+                                          {tech.status === 'learning' && <div className="w-2.5 h-2.5 bg-amber-400 rounded-full" />}
+                                          {tech.status === 'to-explore' && <div className="w-2.5 h-2.5 bg-slate-600 rounded-full" />}
+                                        </button>
                                       </div>
 
+                                      <p className="text-xs leading-relaxed mb-3 text-slate-300 font-normal">
+                                        {isSimpleMode ? tech.simpleMetaphor : tech.technicalExplanation}
+                                      </p>
+
+                                      {/* +INFO AI Workspace Button */}
                                       <button
-                                        onClick={(e) => handleToggleStatus(e, tech.id)}
-                                        className="w-5 h-5 rounded-full border border-slate-700 bg-slate-800 flex items-center justify-center"
+                                        onClick={(e) => handleOpenAiWorkspace(e, tech)}
+                                        className="w-full mt-2 py-2 px-3 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-semibold text-[11px] tracking-wide shadow-md shadow-cyan-500/20 hover:shadow-cyan-500/40 transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer border border-cyan-400/30 group"
                                       >
-                                        {tech.status === 'i-know' && <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full" />}
-                                        {tech.status === 'learning' && <div className="w-2.5 h-2.5 bg-amber-400 rounded-full" />}
-                                        {tech.status === 'to-explore' && <div className="w-2.5 h-2.5 bg-slate-600 rounded-full" />}
+                                        <Sparkles className="w-3.5 h-3.5 text-cyan-200 transition-transform group-hover:rotate-12" />
+                                        <span>+Info</span>
                                       </button>
                                     </div>
 
-                                    <p className="text-xs leading-relaxed mb-3 text-slate-300 font-normal">
-                                      {isSimpleMode ? tech.simpleMetaphor : tech.technicalExplanation}
-                                    </p>
-                                  </div>
-
-                                  {/* Connection Teleport Portal inside card */}
-                                  {isSelected && tech.connections && tech.connections.length > 0 && (
-                                    <div className="mt-2 pt-2 border-t border-slate-800">
-                                      <span className="text-[9px] font-bold uppercase tracking-wider block mb-1.5 text-slate-500">
-                                        Teleport Portal:
-                                      </span>
-                                      <div className="flex flex-wrap gap-1.5">
-                                        {tech.connections.map((connId) => {
-                                          const target = techList.find((t) => t.id === connId);
-                                          if (!target) return null;
-                                          return (
-                                            <button
-                                              key={connId}
-                                              onClick={(e) => handleTeleport(e, connId)}
-                                              className="px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1.5 bg-purple-950/60 hover:bg-purple-900/80 text-purple-200 border border-purple-500/30 transition active:scale-95"
-                                            >
-                                              <TechLogo tech={target} className="w-3 h-3" />
-                                              <span>{target.title}</span>
-                                              <ArrowRight className="w-3 h-3 text-purple-400" />
-                                            </button>
-                                          );
-                                        })}
+                                    {/* Connection Teleport Portal inside card */}
+                                    {isSelected && tech.connections && tech.connections.length > 0 && (
+                                      <div className="mt-2 pt-2 border-t border-slate-800">
+                                        <span className="text-[9px] font-bold uppercase tracking-wider block mb-1.5 text-slate-500">
+                                          Teleport Portal:
+                                        </span>
+                                        <div className="flex flex-wrap gap-1.5">
+                                          {tech.connections.map((connId) => {
+                                            const target = techList.find((t) => t.id === connId);
+                                            if (!target) return null;
+                                            return (
+                                              <button
+                                                key={connId}
+                                                onClick={(e) => handleTeleport(e, connId)}
+                                                className="px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1.5 bg-purple-950/60 hover:bg-purple-900/80 text-purple-200 border border-purple-500/30 transition active:scale-95 cursor-pointer"
+                                              >
+                                                <TechLogo tech={target} className="w-3 h-3" />
+                                                <span>{target.title}</span>
+                                                <ArrowRight className="w-3 h-3 text-purple-400" />
+                                              </button>
+                                            );
+                                          })}
+                                        </div>
                                       </div>
-                                    </div>
-                                  )}
-                                </article>
-                              );
-                            })}
-                          </div>
-                        </section>
-                      );
-                    })}
+                                    )}
+                                  </article>
+                                );
+                              })}
+                            </div>
+                          </section>
+                        );
+                      })}
+                  </div>
+                )}
+              </main>
+
+              {/* Right Side: AI Knowledge Workspace Panel */}
+              {activeTechForInfo && (
+                <div className="lg:w-[65%] w-full h-[calc(100vh-140px)] sticky top-20 shrink-0 animate-in slide-in-from-right duration-300">
+                  <AIKnowledgeWorkspace
+                    tech={activeTechForInfo}
+                    onClose={() => setActiveTechForInfo(null)}
+                    onCompareTrigger={(id, target) => {
+                      const matchedComp = comparisons?.find(c => c.id === target || c.title.toLowerCase().includes(target.toLowerCase()));
+                      if (matchedComp) {
+                        setActiveComparison(matchedComp);
+                      }
+                    }}
+                    onNavigateToRelated={(relatedId) => {
+                      handleTechClick(relatedId);
+                    }}
+                  />
                 </div>
               )}
-            </main>
+
+            </div>
           </>
         )}
       </div>
 
-      {/* 🚀 BOTÓN FLOTANTE REDONDO AI TRACK */}
+      {/* BOTÓN FLOTANTE REDONDO AI TRACK */}
       <button
         onClick={() => setIsAiModalOpen(true)}
-        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-extrabold shadow-2xl shadow-purple-950/80 border border-purple-400/40 flex flex-col items-center justify-center gap-0.5 active:scale-90 transition-all group"
+        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-extrabold shadow-2xl shadow-purple-950/80 border border-purple-400/40 flex flex-col items-center justify-center gap-0.5 active:scale-90 transition-all group cursor-pointer"
         title="Open AI Career Roadmap Quiz"
       >
         <Sparkles className="w-5 h-5 text-purple-200 animate-pulse group-hover:rotate-12 transition-transform" />
