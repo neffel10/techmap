@@ -14,7 +14,7 @@ export default function AIKnowledgeWorkspace({
   const [isInitialLoading, setIsInitialLoading] = useState(true); 
   const [isTyping, setIsTyping] = useState(false);
 
-  const chatEndRef = useRef(null);
+  const latestAnswerRef = useRef(null);
   const techName = tech?.name || tech?.title || "Technology";
 
   // --- Initial Overview Fetch ---
@@ -45,12 +45,20 @@ export default function AIKnowledgeWorkspace({
     triggerInitialOverview();
   }, [tech?.id, techName]);
 
-  // --- Auto-scroll ---
+  // --- Auto-scroll to the latest AI answer ---
   useEffect(() => {
-    if (!isInitialLoading) {
-      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages, isTyping, isInitialLoading]);
+    if (isInitialLoading) return;
+
+    const timer = window.setTimeout(() => {
+      latestAnswerRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest'
+      });
+    }, 120);
+
+    return () => window.clearTimeout(timer);
+  }, [messages, isInitialLoading]);
 
   const suggestedPrompts = [
     "💡 Teach me in a simple way",
@@ -81,6 +89,9 @@ export default function AIKnowledgeWorkspace({
       setIsTyping(false);
     }
   };
+
+  const overviewMessages = messages.filter((m) => m.isOverview);
+  const followUpMessages = messages.filter((m) => !m.isOverview);
 
   return (
     <div className="w-full h-full bg-slate-900/95 border border-slate-800 rounded-2xl p-5 md:p-7 flex flex-col text-slate-100 backdrop-blur-md shadow-2xl overflow-y-auto">
@@ -117,8 +128,12 @@ export default function AIKnowledgeWorkspace({
         ) : (
           <>
             {/* Initial Overview */}
-            {messages.filter(m => m.isOverview).map((msg, idx) => (
-              <div key={`ov-${idx}`} className="text-slate-200 text-sm leading-relaxed space-y-5">
+            {overviewMessages.map((msg, idx) => (
+              <div
+                key={`ov-${idx}`}
+                ref={idx === overviewMessages.length - 1 ? latestAnswerRef : null}
+                className="text-slate-200 text-sm leading-relaxed space-y-5"
+              >
                 <ReactMarkdown
                   components={{
                     h2: ({node, ...props}) => (
@@ -147,11 +162,12 @@ export default function AIKnowledgeWorkspace({
             ))}
 
             {/* Interactive Chat Responses */}
-            {messages.filter(m => !m.isOverview).length > 0 && (
+            {followUpMessages.length > 0 && (
               <div className="space-y-4 pt-6 border-t border-slate-800">
-                {messages.filter(m => !m.isOverview).map((msg, idx) => (
+                {followUpMessages.map((msg, idx) => (
                   <div 
                     key={idx} 
+                    ref={idx === followUpMessages.length - 1 ? latestAnswerRef : null}
                     className={`p-4 rounded-xl text-xs flex gap-3 ${
                       msg.role === 'user' 
                         ? 'bg-cyan-950/60 border border-cyan-800/50 text-cyan-100 ml-auto max-w-[85%]' 
@@ -280,8 +296,6 @@ export default function AIKnowledgeWorkspace({
             <span>Ask</span>
           </button>
         </form>
-
-        <div ref={chatEndRef} />
       </div>
 
     </div>
