@@ -4,7 +4,7 @@ const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 
 export const queryTechAI = async (techName, promptText) => {
   if (!GROQ_API_KEY) {
-    console.warn("VITE_GROQ_API_KEY missing in .env. Using fallback.");
+    console.warn("⚠️ VITE_GROQ_API_KEY missing in environment. Using fallback.");
     return getLocalFallbackResponse(techName, promptText);
   }
 
@@ -35,8 +35,9 @@ FORMATTING RULES:
   try {
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
+      mode: "cors",
       headers: {
-        "Authorization": `Bearer ${GROQ_API_KEY}`,
+        "Authorization": `Bearer ${GROQ_API_KEY.trim()}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
@@ -61,6 +62,8 @@ FORMATTING RULES:
       return data.choices?.[0]?.message?.content || getLocalFallbackResponse(techName, promptText);
     }
 
+    const errorData = await response.text();
+    console.error("Groq API Response Not OK:", response.status, errorData);
     return getLocalFallbackResponse(techName, promptText, true);
 
   } catch (error) {
