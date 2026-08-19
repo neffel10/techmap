@@ -51,7 +51,12 @@ Mention 3-4 platforms using ${techName} in production.`
 
     if (response.ok) {
       const data = await response.json();
-      return data.choices?.[0]?.message?.content || getLocalFallbackResponse(techName, promptText);
+      const rawContent = data.choices?.[0]?.message?.content || "";
+      
+      // Limpia las etiquetas <think>...</think> para mostrar solo la respuesta final
+      const cleanContent = rawContent.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
+
+      return cleanContent || getLocalFallbackResponse(techName, promptText);
     }
 
     const errorData = await response.text();
