@@ -8,29 +8,22 @@ export const queryTechAI = async (techName, promptText) => {
     return getLocalFallbackResponse(techName, promptText);
   }
 
-  const systemInstructions = `
-You are TechMap AI, an expert technical mentor and software architecture atlas.
-You MUST ALWAYS answer in clear, professional ENGLISH.
+  const isInitialOverview = promptText.includes("Provide a structured overview");
 
-CRITICAL INSTRUCTION FOR INITIAL OVERVIEW:
-When providing an initial technical breakdown, structure your response using exact Markdown headers (H2) and generous spacing between sections:
-
+  const systemInstructions = isInitialOverview
+    ? `You are TechMap AI, an expert technical mentor. Answer in clear English.
+Structure your initial overview with exact H2 headings:
 ## EXTENDED CONCEPT
-Provide a deep, engaging explanation of what ${techName} is, its core philosophy, and how it works under the hood. (2-3 well-spaced paragraphs).
+Provide a deep explanation of what ${techName} is and how it works (2-3 paragraphs).
 
 ## KEY USE CASES
-- **Use Case 1**: Clear explanation.
-- **Use Case 2**: Clear explanation.
-- **Use Case 3**: Clear explanation.
+- **Use Case 1**: Explanation.
+- **Use Case 2**: Explanation.
+- **Use Case 3**: Explanation.
 
 ## SUCCESS STORIES
-Mention 3-4 notable companies or platforms leveraging ${techName} in production. (If not applicable, omit this section).
-
-FORMATTING RULES:
-- Everything MUST be written in English.
-- Use bold highlights, bullet points, and code snippets where appropriate.
-- Leave double line breaks between headings and content for crisp readability.
-`;
+Mention 3-4 platforms using ${techName} in production.`
+    : `You are TechMap AI, an expert technical mentor. Answer the user's specific question about ${techName} clearly, directly, and concisely in English. Use Markdown formatting when helpful.`;
 
   try {
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -40,7 +33,7 @@ FORMATTING RULES:
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "groq/compound-mini", // <-- Modelo gratuito del tier de producción
+        model: "qwen/qwen3.6-27b",
         messages: [
           {
             role: "system",
@@ -52,7 +45,7 @@ FORMATTING RULES:
           }
         ],
         temperature: 0.3,
-        max_tokens: 1000
+        max_tokens: 600
       })
     });
 
