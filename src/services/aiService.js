@@ -40,7 +40,7 @@ FORMATTING RULES:
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "llama-3.1-70b-versatile", // <-- Modelo compatible universal
+        model: "groq/compound-mini", // <-- Modelo gratuito del tier de producción
         messages: [
           {
             role: "system",
